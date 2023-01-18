@@ -13,13 +13,17 @@ const io = socketio(server, {
     credentials: true
   }
 });
+const table = {
+  hand: [],
+  score: 0
+};
 const players = [];
 let deck = [];
 let currentPlayer = 0;
 
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
-        players.push({ id: socket.id, name, hand: [] });
+        players.push({ id: socket.id, name, hand: [], score: 0 });
         console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         if(players.length > 1)
@@ -78,23 +82,49 @@ const shuffleDeck = (deck) => {
 const drawCard = (p) => {
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
+  p.score = calcScore(p.hand)
   io.emit("updatePlayers", players);
+}
+
+const newTable = () => {
+  table.hand = [];
+  table.hand.push(deck.pop());
+  table.hand.push(deck.pop());
+  table.score = calcScore(table.hand);
+  io.emit("updateTable", table);  
 }
 
 const startGame = () => {
     deck = createDeck();
     deck = shuffleDeck(deck);
     console.log('Game started!')
+    newTable();
     players.forEach(p => {
       console.log("Dando mano a: " + p.name)
         p.hand = [];
         p.hand.push(deck.pop());
         p.hand.push(deck.pop());
+        p.score = calcScore(p.hand)
         io.to(p.id).emit("updatePlayerHand", p.hand);
     })
     io.emit("updatePlayers", players);
 }
-  
+ 
+const calcScore = (hand) => {
+  let s = 0
+  hand.forEach(c => {
+    if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
+      s += 10
+      return
+    }
+    if(c.value == 'A'){
+      s += 11
+      return
+    }
+    s += parseInt(c.value)
+  })
+  return s
+}
 
 server.listen(3000, () => {
   console.log("Server listening on port 3000");

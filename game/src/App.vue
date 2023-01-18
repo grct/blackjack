@@ -1,10 +1,13 @@
 <template>
 <div>
   <div class="table">
+    <h1>Tavolo</h1>
+    <p>Punti {{ table.score }}</p>
     <div class="cards">
-    <Card v-for="c in table" :key="c" :card="c" />
+    <Card v-for="c in table.hand" :key="c" :card="c" />
   </div>
   </div>
+  <h1>Le tue carte:</h1>
   <div class="cards">
     <Card v-for="c in hand" :key="c" :card="c" />
   </div>

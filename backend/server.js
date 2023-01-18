@@ -6,25 +6,18 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
-    allowEIO3: true,
-    cors: {
-      origin: true,
-      methods: ["GET", "POST"],
-      credentials: true
-    }
-  });
-// app.use(cors({ origin: "http://127.0.0.1:3001/", credentials: true }));
-
+  allowEIO3: true,
+  cors: {
+    origin: true,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 const players = [];
 let deck = [];
 let currentPlayer = 0;
 
 io.on("connection", (socket) => {
-    // socket.on("test", (a) => {
-    //     console.log('eeee')
-    //     console.log(a)
-    // })
-
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [] });
         console.log('New player: ' + socket.id + ' | Name: ' + name)
@@ -45,6 +38,8 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         // console.log("Disconnected: " + socket.handshake.headers.origin)
+
+        // Mostra lista connessi
         io.fetchSockets()
         .then((sockets) => {
           sockets.forEach((socket) => {
@@ -53,9 +48,6 @@ io.on("connection", (socket) => {
         })
         .catch(console.log)
 
-        // io.eio.clients.forEach(e => {
-        //     console.log(e.id) 
-        // });
         const index = players.findIndex((player) => player.id === socket.id);
         players.splice(index, 1);
         io.emit("updatePlayers", players);
@@ -91,13 +83,13 @@ const startGame = () => {
     deck = createDeck();
     deck = shuffleDeck(deck);
     console.log('Game started!')
-    for (let player of players) {
-        player.hand = [];
-        for (let i = 0; i < 2; i++) {
-            player.hand.push(deck.pop());
-        }
-        io.emit("updatePlayerHand", player.hand);
-    }
+    players.forEach(p => {
+      console.log("Dando mano a : " + p.id)
+        p.hand = [];
+        p.hand.push(deck.pop());
+        p.hand.push(deck.pop());
+        io.to(p.id).emit("updatePlayerHand", p.hand);
+    })
     io.emit("updatePlayers", players);
 }
   

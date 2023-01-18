@@ -23,11 +23,17 @@ let currentPlayer = 0;
 
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
-        players.push({ id: socket.id, name, hand: [], score: 0 });
+        players.push({ id: socket.id, name, hand: [], score: 0, ready: false });
         console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         if(players.length > 1)
             startGame()
+    });
+
+    socket.on("playerReady", () => {
+      let p = players.find(p => p.id === socket.id);
+      p.ready = !p.ready
+      io.emit("updatePlayers", players);
     });
 
     socket.on("makeBet", (bet) => {
@@ -86,12 +92,19 @@ const drawCard = (p) => {
   io.emit("updatePlayers", players);
 }
 
+const tableDraw = () => {
+  table.hand.push(deck.pop());
+  table.score = calcScore(table.hand)
+}
+
 const newTable = () => {
   table.hand = [];
   table.hand.push(deck.pop());
   table.hand.push(deck.pop());
   table.score = calcScore(table.hand);
-  io.emit("updateTable", table);  
+  while(table.score < 18)
+    tableDraw()
+  io.emit("updateTable", table);
 }
 
 const startGame = () => {

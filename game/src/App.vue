@@ -16,7 +16,9 @@
   <br> 
   Punti: {{ score  }}
   </div>
-  <button  @click="drawCard">draw</button>
+  <button @click="drawCard" v-if="score < 21">draw</button>
+  <button @click="changeReady">Stay</button>
+  {{  ready }}
   <div class="playerlist">
     <h1>Giocatori:</h1>
     <p v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }}</p>
@@ -32,6 +34,7 @@ export default {
   data(){
     return {
       hand: [],
+      ready: false,
       table: [],
       players: [],
       btn: undefined,
@@ -79,6 +82,10 @@ export default {
   methods: {
     drawCard(){
       this.$socket.emit("draw");
+    },
+    changeReady(){
+      this.ready = !this.ready
+      this.$socket.emit("playerReady");
     }
   },
 }

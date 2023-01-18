@@ -19,6 +19,7 @@ const table = {
 };
 const players = [];
 let timer = undefined;
+let time_left = 0;
 let round = 0;
 let deck = [];
 let currentPlayer = 0;
@@ -28,6 +29,8 @@ io.on("connection", (socket) => {
         players.push({ id: socket.id, name, hand: [], score: 0, ready: false });
         console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
+        let p = players.find(p => p.id === socket.id);
+        io.to(p.id).emit("updateTimeout", time_left);
         if(players.length > 1)
             startGame()
     });
@@ -129,7 +132,9 @@ const startGame = () => {
   deck = shuffleDeck(deck);
   console.log('Game started!')
   newRound();
-  timer = setInterval(newRound, 15000);
+  time_left = 15
+  timer = setInterval(newRound, 1000);
+  io.emit("updateTimeout", time_left);
 }
 
 const newRound = () => {
@@ -139,10 +144,18 @@ const newRound = () => {
     console.log('Round interrotto')
     return
   }
-  round++;
-  console.log('New round! ' + round)
-  newTable()
-  giveCards()
+  if(time_left <= 0){
+    time_left = 15
+    round++;
+    console.log('New round! ' + round)
+    newTable()
+    giveCards()
+    io.emit("updateTimeout", time_left);
+    return
+  }
+  time_left -= 1
+  io.emit("updateTimeout", time_left);
+  
 
 }
  

@@ -1,6 +1,8 @@
 <template>
 <div>
   <div class="table">
+    Prossimo round:
+    {{ timeout }} s
     <h1>Tavolo</h1>
     <p>Punti {{ table.score }}</p>
     <div class="cards">
@@ -37,7 +39,7 @@ export default {
       ready: false,
       table: [],
       players: [],
-      btn: undefined,
+      timeout: 0,
     }
   },
   computed: {
@@ -78,6 +80,10 @@ export default {
     updatePlayerHand(hand){
       this.hand = hand
     },
+    updateTimeout(t){
+      this.timeout = t
+      // setInterval(this.updateTimeout, 1000);
+    }
   },
   methods: {
     drawCard(){
@@ -86,6 +92,9 @@ export default {
     changeReady(){
       this.ready = !this.ready
       this.$socket.emit("playerReady");
+    },
+    updateTimeout(){
+      this.timeout -= 1
     }
   },
 }

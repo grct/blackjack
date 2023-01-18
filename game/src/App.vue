@@ -1,5 +1,10 @@
 <template>
 <div>
+  <div class="table">
+    <div class="cards">
+    <Card v-for="c in table" :key="c" :card="c" />
+  </div>
+  </div>
   <div class="cards">
     <Card v-for="c in hand" :key="c" :card="c" />
   </div>
@@ -9,6 +14,10 @@
   Punti: {{ score  }}
   </div>
   <button  @click="drawCard">draw</button>
+  <div class="playerlist">
+    <h1>Giocatori:</h1>
+    <p v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }}</p>
+  </div>
 </div>
 </template>
 
@@ -20,6 +29,8 @@ export default {
   data(){
     return {
       hand: [],
+      table: [],
+      players: [],
       btn: undefined,
     }
   },
@@ -53,11 +64,13 @@ export default {
       console.log("socket disconnected...")
     },
     updatePlayers(players) {
-      console.log(players)
+      this.players = players
+    },
+    updateTable(table) {
+      this.table = table
     },
     updatePlayerHand(hand){
       this.hand = hand
-      console.log(hand)
     },
   },
   methods: {

@@ -1,10 +1,12 @@
 <template>
 <div>
-  {{ name }}
-  <br>
-  {{ hand }}
   <div class="cards">
     <Card v-for="c in hand" :key="c" :card="c" />
+  </div>
+  <div>
+  Ciao {{ name }},
+  <br> 
+  Punti: {{ score  }}
   </div>
   <button  @click="drawCard">draw</button>
 </div>
@@ -24,6 +26,21 @@ export default {
   computed: {
     name(){
       return Math.floor(Math.random() * 1100)
+    },
+    score(){
+      let s = 0
+      this.hand.forEach(c => {
+        if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
+          s += 10
+          return
+        }
+        if(c.value == 'A'){
+          s += 11
+          return
+        }
+        s += parseInt(c.value)
+      })
+      return s
     }
   },
   sockets: {
@@ -66,7 +83,16 @@ body {
 }
 .cards {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
+  overflow-x: scroll;
 }
+.cards *:first-child {
+    margin-left: auto;
+}
+
+.cards *:last-child {
+    margin-right: auto;
+}
+
 </style>

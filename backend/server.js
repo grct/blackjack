@@ -18,6 +18,8 @@ const table = {
   score: 0
 };
 const players = [];
+let timer = undefined;
+let round = 0;
 let deck = [];
 let currentPlayer = 0;
 
@@ -67,11 +69,12 @@ const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"
 
 const createDeck = () => {
   const deck = [];
-  for (let suit of suits) {
-    for (let value of values) {
-      deck.push({ suit, value });
+  for(let i=0; i<4; i++)
+    for (let suit of suits) {
+      for (let value of values) {
+        deck.push({ suit, value });
+      }
     }
-  }
   return deck;
 };
 
@@ -107,20 +110,40 @@ const newTable = () => {
   io.emit("updateTable", table);
 }
 
+const giveCards = () => {
+  players.forEach(p => {
+    console.log("Dando mano a: " + p.name)
+      p.hand = [];
+      p.hand.push(deck.pop());
+      p.hand.push(deck.pop());
+      p.score = calcScore(p.hand)
+      io.to(p.id).emit("updatePlayerHand", p.hand);
+      io.emit("updatePlayers", players);
+  })
+}
+
 const startGame = () => {
-    deck = createDeck();
-    deck = shuffleDeck(deck);
-    console.log('Game started!')
-    newTable();
-    players.forEach(p => {
-      console.log("Dando mano a: " + p.name)
-        p.hand = [];
-        p.hand.push(deck.pop());
-        p.hand.push(deck.pop());
-        p.score = calcScore(p.hand)
-        io.to(p.id).emit("updatePlayerHand", p.hand);
-    })
-    io.emit("updatePlayers", players);
+  if(timer)
+    return
+  deck = createDeck();
+  deck = shuffleDeck(deck);
+  console.log('Game started!')
+  newRound();
+  timer = setInterval(newRound, 15000);
+}
+
+const newRound = () => {
+  if(players.length < 2) {
+    clearInterval(timer)
+    timer = false
+    console.log('Round interrotto')
+    return
+  }
+  round++;
+  console.log('New round! ' + round)
+  newTable()
+  giveCards()
+
 }
  
 const calcScore = (hand) => {

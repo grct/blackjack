@@ -3,16 +3,22 @@
   {{ name }}
   <br>
   {{ hand }}
-  <button @click="drawCard">draw</button>
+  <div class="cards">
+    <Card v-for="c in hand" :key="c" :card="c" />
+  </div>
+  <button  @click="drawCard">draw</button>
 </div>
 </template>
 
 <script>
+import Card from './components/Card.vue'
 export default {
+  components: { Card },
   name: 'App',
   data(){
     return {
-      hand: []
+      hand: [],
+      btn: undefined,
     }
   },
   computed: {
@@ -41,19 +47,9 @@ export default {
     drawCard(){
       this.$socket.emit("draw");
     }
-  }
+  },
 }
 </script>
-
-
-
-
-
-
-
-
-
-
 
 <style>
 body {
@@ -67,5 +63,10 @@ body {
   color: white;
   margin-top: 60px;
   background-color: black;
+}
+.cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

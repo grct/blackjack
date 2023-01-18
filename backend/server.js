@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
     socket.on("draw", () => {
       let p = players.find(p => p.id === socket.id);
-      console.log(p + " is drawing")
+      console.log(p.name + " is drawing")
       drawCard(p);
     })
 });

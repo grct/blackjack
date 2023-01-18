@@ -25,6 +25,10 @@
     <h1>Giocatori:</h1>
     <p v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }}</p>
   </div>
+  <div>
+    History:
+    {{ history }}
+  </div>
 </div>
 </template>
 
@@ -36,9 +40,10 @@ export default {
   data(){
     return {
       hand: [],
-      ready: false,
+      ready: true,
       table: [],
       players: [],
+      history: [],
       timeout: 0,
     }
   },
@@ -83,6 +88,15 @@ export default {
     updateTimeout(t){
       this.timeout = t
       // setInterval(this.updateTimeout, 1000);
+    },
+    showResult(r){
+      if(r == 'table')
+        this.history.push('Persa')
+      if(r == 'player')
+        this.history.push('Vinta')
+      if(r == 'tie')
+        this.history.push('Parità')
+        
     }
   },
   methods: {

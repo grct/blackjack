@@ -20,8 +20,7 @@ let currentPlayer = 0;
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [] });
-        console.log('New player: ' + socket.id + ' | Name: ' + name)
-        console.log(players.length)
+        console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         if(players.length > 1)
             startGame()
@@ -30,33 +29,30 @@ io.on("connection", (socket) => {
     socket.on("makeBet", (bet) => {
         players[currentPlayer].bet = bet;
         currentPlayer++;
-        if (currentPlayer === players.length) {
-            currentPlayer = 0;
-        }
+        if (currentPlayer === players.length)
+          currentPlayer = 0;
         io.emit("updatePlayers", players);
     });
 
     socket.on("disconnect", () => {
-        // console.log("Disconnected: " + socket.handshake.headers.origin)
-
-        // Mostra lista connessi
-        io.fetchSockets()
-        .then((sockets) => {
-          sockets.forEach((socket) => {
-            console.log(socket.client.id)
-          })
-        })
-        .catch(console.log)
-
+        console.log(`(${players.length}) Left: ${socket.id}`)
+        // Rimuovi giocatore dalla lista
         const index = players.findIndex((player) => player.id === socket.id);
         players.splice(index, 1);
+        // Aggiorna i socket
         io.emit("updatePlayers", players);
     });
+
+    socket.on("draw", () => {
+      let p = players.find(p => p.id === socket.id);
+      console.log(p + " is drawing")
+      drawCard(p);
+    })
 });
 
 
 // CREA MAZZO
-const suits = ["spades", "hearts", "diamonds", "clubs"];
+const suits = ["spade", "cuori", "quadri", "picche"];
 const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 const createDeck = () => {
@@ -68,7 +64,6 @@ const createDeck = () => {
   }
   return deck;
 };
-// /////////////
 
 // MESCOLA MAZZO
 const shuffleDeck = (deck) => {
@@ -79,12 +74,19 @@ const shuffleDeck = (deck) => {
     return deck;
 };
 
+// Pesca una carta
+const drawCard = (p) => {
+  p.hand.push(deck.pop());
+  io.to(p.id).emit("updatePlayerHand", p.hand);
+  io.emit("updatePlayers", players);
+}
+
 const startGame = () => {
     deck = createDeck();
     deck = shuffleDeck(deck);
     console.log('Game started!')
     players.forEach(p => {
-      console.log("Dando mano a : " + p.id)
+      console.log("Dando mano a: " + p.name)
         p.hand = [];
         p.hand.push(deck.pop());
         p.hand.push(deck.pop());

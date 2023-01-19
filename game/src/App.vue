@@ -19,8 +19,8 @@
   Punti: {{ score  }}
   </div>
   <button @click="drawCard" v-if="score < 21">draw</button>
-  <button @click="changeReady">Stay</button>
-  {{  ready }}
+  <button @click="changeStay">Stay</button>
+  {{  stay }}
   <div class="playerlist">
     <h1>Giocatori:</h1>
     <p v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }}</p>
@@ -40,7 +40,7 @@ export default {
   data(){
     return {
       hand: [],
-      ready: true,
+      stay: true,
       table: [],
       players: [],
       history: [],
@@ -114,9 +114,9 @@ export default {
     drawCard(){
       this.$socket.emit("draw");
     },
-    changeReady(){
-      this.ready = !this.ready
-      this.$socket.emit("playerReady");
+    changeStay(){
+      this.stay = !this.stay
+      this.$socket.emit("playerStay");
     },
     updateTimeout(){
       this.timeout -= 1

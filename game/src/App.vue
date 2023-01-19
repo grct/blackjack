@@ -18,7 +18,7 @@
   <br> 
   Punti: {{ score  }}
   </div>
-  <button @click="drawCard" v-if="score < 21">draw</button>
+  <!-- <button @click="drawCard" v-if="score < 21">draw</button> -->
   <button @click="changeStay">Stay</button>
   {{  stay }}
   <div class="playerlist">
@@ -111,9 +111,9 @@ export default {
     }
   },
   methods: {
-    drawCard(){
-      this.$socket.emit("draw");
-    },
+    // drawCard(){
+    //   this.$socket.emit("draw");
+    // },
     changeStay(){
       this.stay = !this.stay
       this.$socket.emit("playerStay");

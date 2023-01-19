@@ -32,7 +32,9 @@ io.on("connection", (socket) => {
         let p = players.find(p => p.id === socket.id);
         io.to(p.id).emit("updateTimeout", time_left);
         if(players.length > 0)
+          setTimeout(function(){
             startGame()
+          }, 5000);
     });
 
     socket.on("playerStay", () => {
@@ -58,11 +60,11 @@ io.on("connection", (socket) => {
         io.emit("updatePlayers", players);
     });
 
-    socket.on("draw", () => {
-      let p = players.find(p => p.id === socket.id);
-      console.log(p.name + " is drawing")
-      drawCard(p);
-    })
+    // socket.on("draw", () => {
+    //   let p = players.find(p => p.id === socket.id);
+    //   console.log(p.name + " is drawing")
+    //   drawCard(p);
+    // })
 });
 
 
@@ -92,6 +94,7 @@ const shuffleDeck = (deck) => {
 
 // Pesca una carta
 const drawCard = (p) => {
+  console.log('Utente pesca!')
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -99,6 +102,7 @@ const drawCard = (p) => {
 }
 
 const tableDraw = () => {
+  console.log('Tavolo pesca!')
   table.hand.push(deck.pop());
   table.score = calcScore(table.hand)
   io.emit("updateTable", table);
@@ -113,7 +117,7 @@ const newTable = () => {
 
 const giveCards = () => {
   players.forEach(p => {
-    console.log("Dando mano a: " + p.name)
+    // console.log("Dando mano a: " + p.name)
       p.hand = [];
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
@@ -156,8 +160,6 @@ const newRound = () => {
 
   // Se i giocatori NON hanno finito di pescare
   if(!players.every(isStaying)){
-    console.log(players.every(isStaying))
-    console.log(players)
     time_left = 15
     io.emit("updateTimeout", time_left);
     return
@@ -165,19 +167,31 @@ const newRound = () => {
 
   // Il tavolo pesca
   if(table.score < 17 && table.hand.length > 0){
-    time_left = 20
+
+    // while(table.score < 17 && table.hand.length > 0){
+      // time_left = 20
+      // io.emit("updateTimeout", time_left);
+      tableDraw()
+      let i = setInterval(() => {
+        if(table.score < 17 && table.hand.length > 0)
+          tableDraw()
+        else
+          clearInterval(i)
+      }, 1000);
+
+    // }
+    checkWinners()
+    time_left = 10
     io.emit("updateTimeout", time_left);
-    tableDraw()
     return
   }
-
+  
   // Nuovo round da 0
   time_left = 15
   round++;
   console.log('New round! ' + round)
   newTable()
   giveCards()
-  checkWinners()
   io.emit("updateTimeout", time_left);
 }
 
@@ -193,14 +207,12 @@ const calcScore = (hand) => {
           s += 10
         if(!ace)
           s += 10
-        console.log('figura: ' + s)
         return
       }
       if(c.value == 'A'){
         // controllo se è un +11 o +1
         s+11 > 21 ? s++ : s += 11
         ace = true
-        console.log('asso ' + s)
         return
       }
       s += parseInt(c.value)

@@ -21,15 +21,17 @@
 - [x] Timer e gestione rounds
 - [x] Calcolo vincitore + cronologia rounds
 - [X] Sistemare pescate aggiuntive player e banco
-- [ ] Gestire Immagini via Cache
-- [ ] Gestire Punteggio via Cache
+- [X] Gestire Nome via Cache
 - [X] Messaggio di attesa per chi entra nel mezzo di un turno
+- [ ] Fixare bug (ogni tanto il banco pesca all'infinito)
+- [ ] Migliorare algoritmo trova-vincitore
 - [ ] Sezione Admin con visualizzazione di tutti i dati
 - [ ] Mostrare anche le mani degli altri giocatori
 - [ ] Limitare i player a 7
 - [X] Gestione punteggio Asso (1 / 11)
 - [ ] Differenziare 21 da Blackjack (Asso + carta)
-- [ ] Animazioni
+- [X] Animazioni
+- [X] Effetti alla vittoria
 - [ ] Migliorare CSS
 - [ ] Completare readme
 - [ ] Pulizia codice finale + commenti

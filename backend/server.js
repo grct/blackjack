@@ -26,7 +26,7 @@ let currentPlayer = 0;
 
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
-        players.push({ id: socket.id, name, hand: [], score: 0, stay: true });
+        players.push({ id: socket.id, name, hand: [], score: 0, stay: true, wins: 0, loses: 0, ties: 0 });
         console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         let p = players.find(p => p.id === socket.id);
@@ -253,24 +253,37 @@ const checkWinners = () => {
   players.forEach(p => {
     let result = null
     // Entrambi blacjack
-    if(p.score == 21 && table.score == 21)
+    if(p.score == 21 && table.score == 21){
       result = 'tie'
+      p.ties++
+    }
     // Player Blackjack
-    if(p.score == 21 && table.score != 21)
+    if(p.score == 21 && table.score != 21){
       result = 'player'
+      p.wins++
+    }
     // Tavolo blackjakc
-    if(p.table == 21 && p.score != 21)
+    if(p.table == 21 && p.score != 21){
       result = 'table'
+      p.loses++
+    }
     // Player si avvicina a 21
-    if(p.score > table.score && p.score < 21)
+    if(p.score > table.score && p.score < 21){
       result = 'player'
+      p.wins++
+    }
     // Tabolo si avvicina a 21
-    if(table.score > p.score && table.score < 21)
+    if(table.score > p.score && table.score < 21){
       result = 'table'
+      p.loses++
+    }
     // Entrambi sopra 21
-    if(p.score > 21 && table.score > 21)
+    if(p.score > 21 && table.score > 21){
       result = 'tie'
+      p.ties++
+    }
     io.to(p.id).emit("showResult", result);
+    io.emit("updatePlayers", players);
   })
 }
 

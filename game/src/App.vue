@@ -9,6 +9,10 @@
     <input type="text" v-model="name">
     <div class="btn" @click="name.length >= 3 ? join() : null">Conferma</div>
   </div>
+  <div class="playerlist">
+    <h1 style="text-align: left">Players:</h1>
+    <div class="player" v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span></div>
+  </div>
   <!-- GIOCO -->
   <div v-if="name.length >= 3">
     <div class="table" v-if="table.hand">
@@ -322,4 +326,25 @@ body {
   transition-duration: 500ms;
   opacity: 0;
 }
+.playerlist {
+  position: absolute;
+  font-size: 0.5rem;
+  text-align: left;
+  padding: 3vh 2vw 3vh;
+  background-color: var(--surface-hover);
+  border: 2px solid var(--surface-border);
+  left: 3vw;
+}
+.player {
+  margin-top: 2vh;
+  text-align: left;
+  font-size: 0.6rem;
+}
+.primary {
+  color: var(--primary) !important;
+}
+.error {
+  color: var(--error) !important;
+}
+
 </style>

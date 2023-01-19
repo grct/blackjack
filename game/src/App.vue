@@ -53,17 +53,28 @@ export default {
     },
     score(){
       let s = 0
-      this.hand.forEach(c => {
-        if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
-          s += 10
-          return
-        }
-        if(c.value == 'A'){
-          s += 11
-          return
-        }
-        s += parseInt(c.value)
-      })
+      let ace = false;
+      if(this.hand != undefined && this.hand.length > 0)
+        this.hand.forEach(c => {
+          if(c == undefined)
+            return
+          if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
+            if(ace && s+10 <= 21)
+              s += 10
+            if(!ace)
+              s += 10
+            console.log('figura: ' + s)
+            return
+          }
+          if(c.value == 'A'){
+            // controllo se è un +11 o +1
+            s+11 > 21 ? s++ : s += 11
+            ace = true
+            console.log('asso ' + s)
+            return
+          }
+          s += parseInt(c.value)
+        })
       return s
     }
   },

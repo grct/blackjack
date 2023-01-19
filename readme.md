@@ -23,7 +23,7 @@
 - [X] Sistemare pescate aggiuntive player e banco
 - [X] Gestire Nome via Cache
 - [X] Messaggio di attesa per chi entra nel mezzo di un turno
-- [ ] Fixare bug (ogni tanto il banco pesca all'infinito)
+- [X] Fixare bug (ogni tanto il banco pesca all'infinito)
 - [ ] Migliorare algoritmo trova-vincitore
 - [ ] Sezione Admin con visualizzazione di tutti i dati
 - [ ] Mostrare anche le mani degli altri giocatori
@@ -33,6 +33,7 @@
 - [X] Animazioni
 - [X] Effetti alla vittoria
 - [ ] Migliorare CSS
+- [X] Responsive
 - [ ] Completare readme
 - [ ] Pulizia codice finale + commenti
 

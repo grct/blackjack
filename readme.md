@@ -1,11 +1,12 @@
 
   ![logo](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/logo.png)
 
-# Blackjack (Vue 3 + Node JS)
 
-Blackjack Multiplayer sviluppato tramite il framework VueJS 3 e Node JS, con l'utilizzo della libreria Socket.io per la gestione dei sockets.
+## Tecnologie
+ - Vue 3 (Javascript Framework)
+ - Node JS (Backend)
+ - SocketIO (Gestione dei Sockets)
 
-  
 
 ## To-do
 - [x] Creazione mazzo (3 Mazzi insieme)

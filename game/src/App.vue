@@ -1,5 +1,6 @@
 <template>
 <div>
+  <Confetti ref="confetti"/>
   <div class="head">
     <img src="@/assets/logo.png" alt="logo" class="logo">
   </div>
@@ -20,7 +21,7 @@
     <!-- OVERLAY -->
     <div class="notplaying" v-if="hand.length < 1">
       <h1>Giocherai dal prossimo round</h1>
-      <p class="notplaying-timeout">{{ timeout }}</p>
+      <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
     </div>
     <div class="player-board" v-if="hand.length > 1">
       <!-- <h1>Le tue carte:</h1> -->
@@ -52,8 +53,9 @@
 
 <script>
 import Card from './components/Card.vue'
+import Confetti from './components/Confetti.vue'
 export default {
-  components: { Card },
+  components: { Card, Confetti },
   name: 'App',
   data(){
     return {
@@ -129,6 +131,7 @@ export default {
         
       if(r == 'player'){
         this.history.push('Vinta')
+        this.$refs.confetti.start()
         document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 0%, rgba(14,14,14,1) 100%)'
       }
 
@@ -139,8 +142,9 @@ export default {
 
       setTimeout(function(){
         // document.getElementById('game').style.background = 'transparent'
+        this.$refs.confetti.stop()
         document.getElementById('game').style.opacity = '0'
-      }, 10000)
+      }.bind(this), 5000)
         
     }
   },
@@ -264,8 +268,9 @@ body {
   justify-content: center;
   align-items: center;
   gap: 3vh;
-  height: 220px;
+  height: 150px;
   position: absolute;
+  z-index: 100;
 }
 .notplaying-timeout {
   font-size: 4rem;

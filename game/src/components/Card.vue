@@ -56,8 +56,8 @@ export default {
 
 <style scoped>
     canvas {
-    width: 192px;
-    height: 256px;
+    width: 9vw;
+    height: 12vw;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;

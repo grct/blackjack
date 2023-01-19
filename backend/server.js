@@ -31,10 +31,11 @@ io.on("connection", (socket) => {
         io.emit("updatePlayers", players);
         let p = players.find(p => p.id === socket.id);
         io.to(p.id).emit("updateTimeout", time_left);
-        if(players.length > 0)
+        if(players.length > 0){
           setTimeout(function(){
             startGame()
           }, 5000);
+        }
     });
 
     socket.on("playerStay", () => {
@@ -115,6 +116,15 @@ const newTable = () => {
   io.emit("updateTable", table);
 }
 
+// const clearHands = () => {
+//   table.hand = []
+//   players.forEach(p => {
+//     p.hand = []
+//   })
+//   io.emit("updateTable", table);
+//   io.emit("updatePlayers", players);
+// }
+
 const giveCards = () => {
   players.forEach(p => {
     // console.log("Dando mano a: " + p.name)
@@ -157,7 +167,7 @@ const updateTimer = () => {
 }
  
 const newRound = () => {
-
+  let i
   // Se i giocatori NON hanno finito di pescare
   if(!players.every(isStaying)){
     time_left = 15
@@ -171,18 +181,21 @@ const newRound = () => {
     // while(table.score < 17 && table.hand.length > 0){
       // time_left = 20
       // io.emit("updateTimeout", time_left);
-      tableDraw()
-      let i = setInterval(() => {
-        if(table.score < 17 && table.hand.length > 0)
-          tableDraw()
-        else
-          clearInterval(i)
-      }, 1000);
+    tableDraw()
+    i = setInterval(() => {
+      if(table.score < 17 && table.hand.length > 0)
+        tableDraw()
+      else
+        clearInterval(i)
+    }, 1000);
 
     // }
-    checkWinners()
     time_left = 10
     io.emit("updateTimeout", time_left);
+    checkWinners()
+    // setTimeout(function(){
+    //   clearHands()
+    // }, 3000);
     return
   }
   

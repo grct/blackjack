@@ -4,10 +4,10 @@
   <div class="head">
     <img src="@/assets/logo.png" alt="logo" class="logo">
   </div>
-  <div class="choosename" v-if="name.length < 3">
+  <div class="choosename" v-if="name.length < 3 || !logged">
     <h1>Scegli un nome</h1>
-    <input type="text" v-model="name">
-    <div class="btn" @click="name.length >= 3 ? join() : null">Conferma</div>
+    <input type="text" v-model="temp">
+    <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
   </div>
   <div class="playerlist">
     <h1 style="text-align: left">Players:</h1>
@@ -17,13 +17,13 @@
   <div v-if="name.length >= 3">
     <div class="table" v-if="table.hand">
       <!-- <h1>Tavolo</h1> -->
-      <p>{{ table.score }}</p>
+      <p style="font-size: 0.8vw">{{ table.score }}</p>
       <div class="cards">
       <Card v-for="c in table.hand" :key="c" :card="c" />
     </div>
     </div>
     <!-- OVERLAY -->
-    <div class="notplaying" v-if="hand.length < 1">
+    <div class="notplaying" v-if="hand.length < 1 || !logged">
       <h1>Giocherai dal prossimo round</h1>
       <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
     </div>
@@ -32,9 +32,9 @@
       <div class="cards">
         <Card v-for="c in hand" :key="c" :card="c" />
       </div>
-      <div class="score">
+      <p style="font-size: 0.8vw">
         {{ score }}
-      </div>
+      </p>
       <div class="btns">
         <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
         <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
@@ -64,7 +64,9 @@ export default {
   data(){
     return {
       hand: [],
+      temp: '',
       name: '',
+      logged: false,
       stay: true,
       table: [],
       players: [],
@@ -154,8 +156,11 @@ export default {
   },
   methods: {
     join(){
-      if(this.name.length >= 3){
+      if(this.temp.length >= 3){
+        this.name = this.temp
+        this.logged = true
         localStorage.name = JSON.stringify(this.name)
+        localStorage.logged = JSON.stringify(this.logged)
         this.$socket.emit("joinGame", this.name);
       }
     },
@@ -172,8 +177,10 @@ export default {
     }
   },
   mounted(){
-    if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2)
+    if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2){
       this.name = JSON.parse(localStorage.name)
+      this.logged = JSON.parse(localStorage.logged)
+    }
   }
 }
 </script>
@@ -220,11 +227,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70px;
+  height: 15vh;
   /* background-color: var(--primary-variant-dark) */
 }
 .logo {
-  width: 180px;
+  width: 18vw;
 }
 .choosename {
   display: flex;
@@ -235,6 +242,8 @@ body {
   position: absolute;
   width: 100%;
   top: 30%;
+  z-index: 100;
+  background-color: var(--background);
 }
 .choosename > input {
   background-color: var(--primary-variant-select);
@@ -243,6 +252,7 @@ body {
   padding: 1vh 2vw 1vh;
   height: 30px;
   color: #ffffffc8;
+ 
 }
 .cards {
   display: flex;
@@ -266,7 +276,7 @@ body {
   background-color: #00000041;
   top: 30%;
   width: 100%;
-  font-size: 0.7rem;
+  font-size: 0.8vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -274,7 +284,7 @@ body {
   gap: 3vh;
   height: 150px;
   position: absolute;
-  z-index: 100;
+  z-index: 99;
 }
 .notplaying-timeout {
   font-size: 4rem;
@@ -286,15 +296,16 @@ body {
   align-items: center;
   background-color: var(--primary-variant-select);
   border: 2px solid var(--primary-variant);
-  width: 50px;
-  height: 50px;
+  height: 4.5vw;
+  width: 4.5vw;
   border-radius: 100vh;
+  font-size: 1vw;
 }
 .btns {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 2vw;
   margin: 4vh 0 2vh;
 }
 .btn {
@@ -304,8 +315,8 @@ body {
   background-color: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 5px;
-  padding: 15px 50px 15px;
-  font-size: 1.2rem;
+  padding: 3vh 3vw 3vh;
+  font-size: 1vw;
   transition-duration: 120ms;
 }
 .btn:hover {
@@ -328,7 +339,7 @@ body {
 }
 .playerlist {
   position: absolute;
-  font-size: 0.5rem;
+  font-size: 0.7vw;
   text-align: left;
   padding: 3vh 2vw 3vh;
   background-color: var(--surface-hover);
@@ -338,7 +349,7 @@ body {
 .player {
   margin-top: 2vh;
   text-align: left;
-  font-size: 0.6rem;
+  font-size: 0.7vw;
 }
 .primary {
   color: var(--primary) !important;

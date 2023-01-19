@@ -13,14 +13,14 @@ Blackjack Multiplayer sviluppato tramite il framework VueJS 3 e Node JS, con l'u
  - [x] Banco e algoritmo decisioni
  - [x] Timer e gestione rounds
  - [x] Calcolo vincitore + cronologia rounds
- - [ ] Sistemare pescate aggiuntive player e banco
+ - [X] Sistemare pescate aggiuntive player e banco
  - [ ] Gestire Immagini via Cache
  - [ ] Gestire Punteggio via Cache
- - [ ] Messaggio di attesa per chi entra nel mezzo di un turno
+ - [X] Messaggio di attesa per chi entra nel mezzo di un turno
  - [ ] Sezione Admin con visualizzazione di tutti i dati
  - [ ] Mostrare anche le mani degli altri giocatori
  - [ ] Limitare i player a 7
- - [ ] Gestione punteggio Asso (1 / 11)
+ - [X] Gestione punteggio Asso (1 / 11)
  - [ ] Differenziare 21 da Blackjack (Asso + carta)
  - [ ] Animazioni
  - [ ] Migliorare CSS

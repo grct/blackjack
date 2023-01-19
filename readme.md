@@ -22,6 +22,8 @@ Blackjack Multiplayer sviluppato tramite il framework VueJS 3 e Node JS, con l'u
  - [ ] Limitare i player a 7
  - [ ] Gestione punteggio Asso (1 / 11)
  - [ ] Differenziare 21 da Blackjack (Asso + carta)
+ - [ ] Animazioni
+ - [ ] Migliorare CSS
  - [ ] Completare readme
  - [ ] Pulizia codice finale + commenti
 

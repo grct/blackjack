@@ -36,7 +36,7 @@ export default {
         }
     },
     props: {
-        card: Array,
+        card: Object,
     },
     mounted(){
     // Get canvas context

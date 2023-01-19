@@ -8,9 +8,6 @@
     <input type="text" v-model="name">
     <div class="btn" @click="name.length >= 3 ? join() : null">Conferma</div>
   </div>
-
-
-
   <!-- GIOCO -->
   <div v-if="name.length >= 3">
     <div class="table" v-if="table.hand">
@@ -82,14 +79,14 @@ export default {
               s += 10
             if(!ace)
               s += 10
-            console.log('figura: ' + s)
+            // console.log('figura: ' + s)
             return
           }
           if(c.value == 'A'){
             // controllo se è un +11 o +1
             s+11 > 21 ? s++ : s += 11
             ace = true
-            console.log('asso ' + s)
+            // console.log('asso ' + s)
             return
           }
           s += parseInt(c.value)
@@ -99,13 +96,13 @@ export default {
   },
   sockets: {
     connect() {
-        console.log('socket connected')
+        console.log('Connesso al server')
         console.log(this.$socket)
         if(this.name.length >= 3)
           this.$socket.emit("joinGame", this.name);
     },
     disconnected() {
-      console.log("socket disconnected...")
+      console.log("Disconnesso dal server")
     },
     updatePlayers(players) {
       this.players = players
@@ -148,9 +145,6 @@ export default {
     }
   },
   methods: {
-    // drawCard(){
-    //   this.$socket.emit("draw");
-    // },
     join(){
       if(this.name.length >= 3){
         localStorage.name = JSON.stringify(this.name)
@@ -159,11 +153,11 @@ export default {
     },
     setDraw(){
       this.stay = false
-      this.$socket.emit("playerStay");
+      this.$socket.emit("playerStay", this.stay);
     },
     setStay(){
       this.stay = true
-      this.$socket.emit("playerStay");
+      this.$socket.emit("playerStay", this.stay);
     },
     updateTimeout(){
       this.timeout -= 1
@@ -283,8 +277,8 @@ body {
   align-items: center;
   background-color: var(--primary-variant-select);
   border: 2px solid var(--primary-variant);
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 100vh;
 }
 .btns {

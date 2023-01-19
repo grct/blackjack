@@ -32,15 +32,15 @@ io.on("connection", (socket) => {
         let p = players.find(p => p.id === socket.id);
         io.to(p.id).emit("updateTimeout", time_left);
         if(players.length > 0){
-          setTimeout(function(){
+          // setTimeout(function(){
             startGame()
-          }, 5000);
+          // }, 5000);
         }
     });
 
-    socket.on("playerStay", () => {
+    socket.on("playerStay", (s) => {
       let p = players.find(p => p.id === socket.id);
-      p.stay = !p.stay
+      p.stay = s
       io.emit("updatePlayers", players);
     });
 
@@ -95,7 +95,7 @@ const shuffleDeck = (deck) => {
 
 // Pesca una carta
 const drawCard = (p) => {
-  console.log('Utente pesca!')
+  // console.log('Utente pesca!')
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -151,12 +151,12 @@ const startGame = () => {
 
 const updateTimer = () => {
   // Controllo che ci siano dei giocatori
-  if(players.length < 1) {
-    clearInterval(timer)
-    timer = false
-    console.log('Round interrotto')
-    return
-  }
+  // if(players.length < 1) {
+  //   clearInterval(timer)
+  //   timer = false
+  //   console.log('Round interrotto')
+  //   return
+  // }
   // Se il tempo è finito
   if(time_left <= 0){
     newRound()
@@ -167,7 +167,10 @@ const updateTimer = () => {
 }
  
 const newRound = () => {
+  if(deck.length < 2)
+    createDeck()
   let i
+
   // Se i giocatori NON hanno finito di pescare
   if(!players.every(isStaying)){
     time_left = 15
@@ -234,10 +237,12 @@ const calcScore = (hand) => {
 }
 
 const isStaying = (p, index, array) => {
+  console.log(p.stay)
   if(!p.stay && p.score < 21)
     drawCard(p)
   if(p.score >= 21)
     p.stay = true
+
   if(index === 0)
       return p.stay
   else

@@ -44,7 +44,6 @@
       </div>
     </div>
     <div id="game" class="game">
-
     </div>
   </div>
   <!-- <div class="playerlist">
@@ -120,6 +119,9 @@ export default {
     },
     updatePlayerHand(hand){
       this.hand = hand
+    },
+    updatePlayerStay(stay){
+      this.stay = stay
     },
     updateTimeout(t){
       this.timeout = t
@@ -332,9 +334,13 @@ body {
   transition-duration: 120ms;
 }
 .game {
+  position: absolute;
+  top: 0;
   height: 100vh;
+  /* background-color: red; */
   width: 100%;
   transition-duration: 500ms;
+  z-index: -1;
   opacity: 0;
 }
 .playerlist {

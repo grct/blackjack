@@ -97,7 +97,7 @@ const shuffleDeck = (deck) => {
 const drawCard = (p) => {
   // console.log('Utente pesca!')
   if(deck.length < 1)
-    createDeck()
+    deck = createDeck()
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -106,7 +106,7 @@ const drawCard = (p) => {
 
 const tableDraw = () => {
   if(deck.length < 1)
-    createDeck()
+    deck = createDeck()
   table.hand.push(deck.pop());
   console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
   if(table.hand[table.hand.length-1] == undefined)
@@ -118,7 +118,7 @@ const tableDraw = () => {
 const newTable = () => {
   table.hand = [];
   if(deck.length < 1)
-    createDeck()
+    deck = createDeck()
   table.hand.push(deck.pop());
   table.score = calcScore(table.hand);
   io.emit("updateTable", table);
@@ -138,7 +138,7 @@ const giveCards = () => {
     // console.log("Dando mano a: " + p.name)
       p.hand = [];
       if(deck.length < 1)
-        createDeck()
+        deck = createDeck()
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
       p.score = calcScore(p.hand)
@@ -245,11 +245,14 @@ const calcScore = (hand) => {
 }
 
 const isStaying = (p, index, array) => {
-  console.log(p.stay)
   if(!p.stay && p.score < 21)
     drawCard(p)
-  if(p.score >= 21)
+  if(p.score >= 21){
     p.stay = true
+    io.to(p.id).emit("updatePlayerStay", p.stay);
+  }
+
+    
 
   if(index === 0)
       return p.stay
@@ -285,7 +288,7 @@ const checkWinners = () => {
     }
 
     if(result.length < 3){
-      if(table.score > 21){
+      if(table.score > 21 && p.score <= 21){
         result = 'player'
         p.wins++
       }

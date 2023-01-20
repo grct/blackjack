@@ -97,8 +97,6 @@ const shuffleDeck = (deck) => {
 // Pesca una carta
 const drawCard = (p) => {
   // console.log('Utente pesca!')
-  if(deck.length < 1)
-    deck = createDeck()
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -106,10 +104,9 @@ const drawCard = (p) => {
 }
 
 const tableDraw = () => {
-  if(deck.length < 1)
-    deck = createDeck()
   table.hand.push(deck.pop());
   console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
+  console.log(deck.length +  ' Carte rimanenti')
   if(table.hand[table.hand.length-1] == undefined)
     console.log(deck)
   table.score = calcScore(table.hand)
@@ -118,8 +115,6 @@ const tableDraw = () => {
 
 const newTable = () => {
   table.hand = [];
-  if(deck.length < 1)
-    deck = createDeck()
   table.hand.push(deck.pop());
   table.score = calcScore(table.hand);
   io.emit("updateTable", table);
@@ -138,8 +133,6 @@ const giveCards = () => {
   players.forEach(p => {
     // console.log("Dando mano a: " + p.name)
       p.hand = [];
-      if(deck.length < 1)
-        deck = createDeck()
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
       p.score = calcScore(p.hand)
@@ -179,6 +172,9 @@ const updateTimer = () => {
  
 const newRound = () => {
   let i
+
+  if(deck.length < 20)
+    deck += createDeck()
 
   // Se i giocatori NON hanno finito di pescare
   if(!players.every(isStaying) && table.hand.length < 2){

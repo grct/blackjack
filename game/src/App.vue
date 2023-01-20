@@ -7,21 +7,21 @@
 
     <div class="pregame"> <!-- Pre partita -->
       <div class="head"> <!-- Header -->
-        <img src="@/assets/logo.png" alt="logo" class="logo">
+        <img src="@/assets/logo.png" alt="logo" style="width: 18vw">
       </div>
 
       <!-- Input seleziona nome -->
-      <div class="choosename" v-if="name.length < 3 || !logged">
+      <div class="choosename" v-if="player.name.length < 3 || !player.logged">
         <h1>Scegli un nome</h1>
         <input type="text" v-model="temp">
         <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
       </div>
     </div>
 
-    <div class="game" v-if="name.length >= 3"> <!-- Partita -->
+    <div class="game" v-if="player.name.length >= 3"> <!-- Partita -->
       
       <!-- Attesa del tuo turno -->
-      <div class="notplaying" v-if="hand.length < 1 || !logged">
+      <div class="notplaying" v-if="player.hand.length < 1 || !player.logged">
         <h1>Giocherai dal prossimo round</h1>
       </div>
 
@@ -40,12 +40,12 @@
       </div>
 
       <!-- Board Player -->
-      <div class="player-board" v-if="hand.length > 1">
+      <div class="player-board" v-if="player.hand.length > 1">
         <!-- Mano Player -->
         <div class="player-hand">
           <div>
             <div class="cards">
-              <Card v-for="c in hand" :key="c" :card="c" />
+              <Card v-for="c in player.hand" :key="c" :card="c" />
             </div>
             <p style="font-size: 0.8vw">
               {{ score }}
@@ -55,8 +55,8 @@
 
         <!-- Comandi -->
         <div class="btns">
-          <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
-          <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
+          <div class="btn" :class="{ selected: !player.stay }" @click="setDraw">Draw</div>
+          <div class="btn" :class="{ selected: player.stay }" @click="setStay">Stay</div>
           <div class="timeout">
             {{ timeout }}
           </div>
@@ -89,25 +89,28 @@ export default {
   name: 'App',
   data(){
     return {
-      hand: [],
-      temp: '',
-      name: '',
-      id: '',
-      logged: false,
-      stay: true,
       table: [],
       players: [],
-      history: [],
+      player: {
+        id: '',
+        name: '',
+        logged: '',
+        hand: '',
+        stay: '',
+        history: []
+      },
+      temp: '',
       timeout: 0,
       error: '',
     }
   },
   computed: {
+    // Calcolo punteggio
     score(){
       let s = 0
       let ace = false;
-      if(this.hand != undefined && this.hand.length > 0)
-        this.hand.forEach(c => {
+      if(this.player.hand != undefined && this.player.hand.length > 0)
+        this.player.hand.forEach(c => {
           if(c == undefined)
             return
           if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
@@ -130,16 +133,17 @@ export default {
       return s
     },
     otherPlayers(){
-      return this.players.filter(p => p.id != this.id)
+      return this.players.filter(p => p.id != this.player.id)
     }
   },
+  // Gestione eventi sockets
   sockets: {
     connect() {
         console.log('Connesso al server')
         console.log(this.$socket)
         this.error = ''
-        if(this.name.length >= 3)
-          this.$socket.emit("joinGame", this.name);
+        if(this.player.name.length >= 3)
+          this.$socket.emit("joinGame", this.player.name);
     },
     disconnect() {
       this.error = 'crash'
@@ -148,7 +152,7 @@ export default {
       this.error = 'crash'
     },
     updateId(id){
-      this.id = id
+      this.player.id = id
     },
     updatePlayers(players) {
       this.players = players
@@ -157,31 +161,32 @@ export default {
       this.table = table
     },
     updatePlayerHand(hand){
-      this.hand = hand
+      this.player.hand = hand
     },
     updatePlayerStay(stay){
-      this.stay = stay
+      this.player.stay = stay
     },
     updateTimeout(t){
       this.timeout = t
     },
+    // Effetto in base al risultato del round
     showResult(r){
       setTimeout(function(){
         this.$refs.backgroundEffects.style.opacity = '100'
-      }, 1000)
+      }.bind(this), 1000)
       if(r == 'table'){
-        this.history.push('Persa')
+        this.player.history.push('Lose')
         this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(251,53,53,1) 0%, rgba(14,14,14,0) 100%)'
       }
         
       if(r == 'player'){
-        this.history.push('Vinta')
+        this.history.push('Win')
         this.$refs.confetti.start()
         this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 2%, rgba(14,14,14,1) 100%)'
       }
 
       if(r == 'tie'){
-        this.history.push('Patta')
+        this.player.history.push('Tie')
         this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(255,255,255,0.5956976540616247) 3%, rgba(14,14,14,1) 100%)'
       }
 
@@ -193,31 +198,34 @@ export default {
     }
   },
   methods: {
+    // Unisciti alla partita
     join(){
       if(this.temp.length >= 3){
-        this.name = this.temp
-        this.logged = true
-        localStorage.name = JSON.stringify(this.name)
-        localStorage.logged = JSON.stringify(this.logged)
-        this.$socket.emit("joinGame", this.name);
+        this.player.name = this.temp
+        this.player.ogged = true
+        localStorage.name = JSON.stringify(this.player.name)
+        localStorage.logged = JSON.stringify(this.player.logged)
+        this.$socket.emit("joinGame", this.player.name);
       }
     },
+    // Gestion Stay-Draw
     setDraw(){
-      this.stay = false
-      this.$socket.emit("playerStay", this.stay);
+      this.player.stay = false
+      this.$socket.emit("playerStay", this.player.stay);
     },
     setStay(){
-      this.stay = true
-      this.$socket.emit("playerStay", this.stay);
+      this.player.stay = true
+      this.$socket.emit("playerStay", this.player.stay);
     },
     updateTimeout(){
       this.timeout -= 1
     }
   },
   mounted(){
+    // Cache
     if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2){
-      this.name = JSON.parse(localStorage.name)
-      this.logged = JSON.parse(localStorage.logged)
+      this.player.name = JSON.parse(localStorage.name)
+      this.player.logged = JSON.parse(localStorage.logged)
     }
   }
 }
@@ -266,11 +274,9 @@ body {
   justify-content: center;
   align-items: center;
   height: 15vh;
-  /* background-color: var(--primary-variant-dark) */
 }
-.logo {
-  width: 18vw;
-}
+
+/* Selezione del nome */
 .choosename {
   display: flex;
   flex-direction: column;
@@ -290,26 +296,9 @@ body {
   padding: 1vh 2vw 1vh;
   height: 30px;
   color: #ffffffc8;
- 
-}
-.cards {
-  display: flex;
-  /* justify-content: center; */
-  align-items: center;
-  overflow-x: scroll;
-  margin: 2vh 0 2vh;
-}
-.cards *:first-child {
-    margin-left: auto;
 }
 
-.cards *:last-child {
-    margin-right: auto;
-}
-.table {
-  margin: 3vh 0 3vh;
-  background: none;
-}
+/* Overlay attesa prossimo turno */
 .notplaying {
   background-color: #00000041;
   top: 30%;
@@ -328,17 +317,71 @@ body {
   font-size: 4rem;
   color: var(--primary);
 }
-.timeout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--primary-variant-select);
-  border: 2px solid var(--primary-variant);
-  height: 4.5vw;
-  width: 4.5vw;
-  border-radius: 100vh;
-  font-size: 1vw;
+
+/* Player */
+.player {
+  margin-top: 2vh;
+  text-align: left;
+  font-size: 0.7vw;
 }
+.player-hand {
+  z-index: 10;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 1vw;
+}
+.player-hand > div { grid-area: 1 / 3 / 2 / 4; }
+
+/* Banco */
+.table {
+  margin: 3vh 0 3vh;
+  background: none;
+}
+
+/* Altri Giocatori */
+.otherplayers {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 1vw;
+  z-index: 1;
+}
+.otherplayers > * > .cards > * > canvas {
+  width: 6vw;
+  height: 8vw;
+}
+.otherplayers > *:nth-child(1) {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.otherplayers > *:nth-child(2) {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.otherplayers > *:nth-child(3) {
+  grid-area: 1 / 4 / 2 / 5;
+}
+.otherplayers > *:nth-child(4) {
+  grid-area: 1 / 5 / 2 / 6;
+}
+
+/* Mano */
+.cards {
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  margin: 2vh 0 2vh;
+}
+.cards *:first-child {
+    margin-left: auto;
+}
+.cards *:last-child {
+    margin-right: auto;
+}
+
+/* Comandi Player */
 .btns {
   display: flex;
   justify-content: center;
@@ -369,6 +412,30 @@ body {
   background-color: var(--secondary-hover) !important;
   transition-duration: 120ms;
 }
+.timeout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-variant-select);
+  border: 2px solid var(--primary-variant);
+  height: 4.5vw;
+  width: 4.5vw;
+  border-radius: 100vh;
+  font-size: 1vw;
+}
+
+/* Lista Players */
+.playerlist {
+  position: absolute;
+  font-size: 0.7vw;
+  text-align: left;
+  padding: 3vh 2vw 3vh;
+  background-color: var(--surface-hover);
+  border: 2px solid var(--surface-border);
+  left: 3vw;
+}
+
+/* Effetti e color */
 .background-effects {
   position: absolute;
   top: 0;
@@ -379,20 +446,6 @@ body {
   z-index: -1;
   opacity: 0;
 }
-.playerlist {
-  position: absolute;
-  font-size: 0.7vw;
-  text-align: left;
-  padding: 3vh 2vw 3vh;
-  background-color: var(--surface-hover);
-  border: 2px solid var(--surface-border);
-  left: 3vw;
-}
-.player {
-  margin-top: 2vh;
-  text-align: left;
-  font-size: 0.7vw;
-}
 .primary {
   color: var(--primary) !important;
 }
@@ -401,46 +454,5 @@ body {
 }
 .ties {
   color: #b1b1b1 !important;
-}
-.player-hand {
-  z-index: 10;
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 1vw;
-}
-.player-hand > div { grid-area: 1 / 3 / 2 / 4; }
-.otherplayers {
-  position: absolute;
-  width: 100%;
-  top: 50%;
-  /* gap: 4vw; */
-  /* margin: 0 3vw 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center; */
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  /* grid-template-rows: repeat(5, 1fr); */
-  grid-column-gap: 1vw;
-  /* grid-row-gap: 1vw; */
-  z-index: 1;
-}
-.otherplayers > * > .cards > * > canvas {
-  width: 6vw;
-  height: 8vw;
-}
-.otherplayers > *:nth-child(1) {
-  grid-area: 1 / 1 / 2 / 2;
-}
-.otherplayers > *:nth-child(2) {
-  grid-area: 1 / 2 / 2 / 3;
-}
-.otherplayers > *:nth-child(3) {
-  grid-area: 1 / 4 / 2 / 5;
-}
-.otherplayers > *:nth-child(4) {
-  grid-area: 1 / 5 / 2 / 6;
 }
 </style>

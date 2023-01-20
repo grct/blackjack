@@ -27,23 +27,24 @@ export default {
             if(this.card.suit == 'picche')
                 return -141
             return -0
+        },
+        image(){
+            return new Image()
+        },
+        ctx(){
+            return this.$refs.card.getContext("2d")
         }
+
     },
     props: {
         card: Object,
     },
     mounted(){
-    // Get canvas context
-    const ctx = this.$refs.card.getContext("2d");
-
-    // Load image
-    const image = new Image();
-    image.onload = () => {
-      // Draw the image into the canvas
-      ctx.drawImage(image, this.x, this.y);
+    this.image.onload = () => {
+        // Draw the image into the canvas
+        this.ctx.drawImage(this.image, this.x, this.y);
     };
-    image.src = require("@/assets/sprites.png");
-
+    this.image.src = require("@/assets/sprites.png");
   }
 }
 </script>

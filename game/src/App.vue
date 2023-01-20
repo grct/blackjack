@@ -1,74 +1,73 @@
 <template>
 <div>
-  <Confetti ref="confetti"/>
-  <div class="head">
-    <img src="@/assets/logo.png" alt="logo" class="logo">
-  </div>
-  <div class="choosename" v-if="name.length < 3 || !logged">
-    <h1>Scegli un nome</h1>
-    <input type="text" v-model="temp">
-    <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
-  </div>
-  <div class="playerlist">
-    <h1 style="text-align: left">Players:</h1>
-    <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
-  </div>
-  <!-- GIOCO -->
-  <div v-if="name.length >= 3">
-    <div class="table" v-if="table.hand">
-      <!-- <h1>Tavolo</h1> -->
-      <p style="font-size: 0.8vw">{{ table.score }}</p>
-      <div class="cards">
-      <Card v-for="c in table.hand" :key="c" :card="c" />
+  <Error :error="error" v-if="error.length > 1"/>
+  <div class="game" v-if="error == ''">
+    <Confetti ref="confetti"/>
+    <div class="head">
+      <img src="@/assets/logo.png" alt="logo" class="logo">
     </div>
+    <div class="choosename" v-if="name.length < 3 || !logged">
+      <h1>Scegli un nome</h1>
+      <input type="text" v-model="temp">
+      <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
     </div>
-    <!-- OVERLAY -->
-    <div class="notplaying" v-if="hand.length < 1 || !logged">
-      <h1>Giocherai dal prossimo round</h1>
-      <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
+    <div class="playerlist">
+      <h1 style="text-align: left">Players:</h1>
+      <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
     </div>
-    <div class="player-board" v-if="hand.length > 1">
-      <div class="player-hand">
-        <div>
-          <div class="cards">
-            <Card v-for="c in hand" :key="c" :card="c" />
-          </div>
-          <p style="font-size: 0.8vw">
-            {{ score }}
-          </p>
-        </div>
-      </div> 
-      <div class="btns">
-        <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
-        <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
-        <div class="timeout">
-          {{ timeout }}
-        </div>
-      </div>
-    </div>
-    <div class="otherplayers">
-      <div v-for="p in otherPlayers.slice(0, 4)" :key="p.id">
+    <!-- GIOCO -->
+    <div v-if="name.length >= 3">
+      <div class="table" v-if="table.hand">
+        <!-- <h1>Tavolo</h1> -->
+        <p style="font-size: 0.8vw">{{ table.score }}</p>
         <div class="cards">
-          <Card v-for="c in p.hand" :key="c" :card="c" />
-        </div>
-        {{ p.name }}
+        <Card v-for="c in table.hand" :key="c" :card="c" />
       </div>
-    </div>
-    <div id="game" class="game" />
+      </div>
+      <!-- OVERLAY -->
+      <div class="notplaying" v-if="hand.length < 1 || !logged">
+        <h1>Giocherai dal prossimo round</h1>
+        <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
+      </div>
+      <div class="player-board" v-if="hand.length > 1">
+        <div class="player-hand">
+          <div>
+            <div class="cards">
+              <Card v-for="c in hand" :key="c" :card="c" />
+            </div>
+            <p style="font-size: 0.8vw">
+              {{ score }}
+            </p>
+          </div>
+        </div> 
+        <div class="btns">
+          <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
+          <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
+          <div class="timeout">
+            {{ timeout }}
+          </div>
+        </div>
+      </div>
+      <div class="otherplayers">
+        <div v-for="p in otherPlayers.slice(0, 4)" :key="p.id">
+          <div class="cards">
+            <Card v-for="c in p.hand" :key="c" :card="c" />
+          </div>
+          {{ p.name }}
+        </div>
+      </div>
+      <div class="background-effects" ref="backgroundEffects" />
+      </div>
   </div>
-  <!-- <div class="playerlist">
-    <h1>Giocatori:</h1>
-    <p v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }}</p>
-  </div> -->
-
 </div>
 </template>
 
 <script>
 import Card from './components/Card.vue'
 import Confetti from './components/Confetti.vue'
+import Error from './components/Error.vue'
 export default {
-  components: { Card, Confetti },
+  components: { Card, Confetti, Error },
   name: 'App',
   data(){
     return {
@@ -82,6 +81,7 @@ export default {
       players: [],
       history: [],
       timeout: 0,
+      error: '',
     }
   },
   computed: {
@@ -119,11 +119,15 @@ export default {
     connect() {
         console.log('Connesso al server')
         console.log(this.$socket)
+        this.error = ''
         if(this.name.length >= 3)
           this.$socket.emit("joinGame", this.name);
     },
-    disconnected() {
-      console.log("Disconnesso dal server")
+    disconnect() {
+      this.error = 'crash'
+    },
+    connect_error() {
+      this.error = 'crash'
     },
     updateId(id){
       this.id = id
@@ -142,33 +146,30 @@ export default {
     },
     updateTimeout(t){
       this.timeout = t
-      // setInterval(this.updateTimeout, 1000);
     },
     showResult(r){
       setTimeout(function(){
-        // document.getElementById('game').style.background = 'transparent'
-        document.getElementById('game').style.opacity = '100'
+        this.$refs.backgroundEffects.style.opacity = '100'
       }, 1000)
       if(r == 'table'){
         this.history.push('Persa')
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(251,53,53,1) 0%, rgba(14,14,14,0) 100%)'
+        this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(251,53,53,1) 0%, rgba(14,14,14,0) 100%)'
       }
         
       if(r == 'player'){
         this.history.push('Vinta')
         this.$refs.confetti.start()
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 2%, rgba(14,14,14,1) 100%)'
+        this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 2%, rgba(14,14,14,1) 100%)'
       }
 
       if(r == 'tie'){
         this.history.push('Patta')
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(255,255,255,0.5956976540616247) 3%, rgba(14,14,14,1) 100%)'
+        this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(255,255,255,0.5956976540616247) 3%, rgba(14,14,14,1) 100%)'
       }
 
       setTimeout(function(){
-        // document.getElementById('game').style.background = 'transparent'
         this.$refs.confetti.stop()
-        document.getElementById('game').style.opacity = '0'
+        this.$refs.backgroundEffects.style.opacity = '0'
       }.bind(this), 5000)
         
     }
@@ -350,7 +351,7 @@ body {
   background-color: var(--secondary-hover) !important;
   transition-duration: 120ms;
 }
-.game {
+.background-effects {
   position: absolute;
   top: 0;
   height: 100vh;

@@ -10,7 +10,7 @@ createApp(App).use(VueConfetti).use(new VueSocketIO({
     connection: SocketIO('http://localhost:3000', {
         // you use any options form here https://socket.io/docs/client-api/#new-Manager-url-options
         reconnection: true,
-        reconnectionAttempts: 5,
+        reconnectionAttempts: 3,
         reconnectionDelay: 3000,
       }),
   })

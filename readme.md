@@ -29,13 +29,14 @@
 - [X] Mostrare anche le mani degli altri giocatori
 - [X] Indicatore nella playerlist tramite ID
 - [ ] Possibilità di cambiare nome
-- [ ] Gestione disconnessione
-- [ ] Migliorare rendering condizionale
+- [X] Gestione disconnessione
+- [X] Migliorare rendering condizionale
 - [X] Gestione punteggio Asso (1 / 11)
 - [X] Differenziare 21 da Blackjack (Asso + carta)
 - [X] Animazioni
 - [X] Effetti alla vittoria
 - [ ] Migliorare CSS
+- [ ] Animazione blackjack
 - [X] Responsive
 - [ ] Completare readme
 - [ ] Pulizia codice finale + commenti

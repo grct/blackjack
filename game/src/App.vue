@@ -56,10 +56,10 @@
         <!-- Comandi -->
         <div class="btns">
           <div class="btn" :class="{ selected: !player.stay }" @click="setDraw">Draw</div>
-          <div class="btn" :class="{ selected: player.stay }" @click="setStay">Stay</div>
           <div class="timeout">
             {{ timeout }}
           </div>
+          <div class="btn" :class="{ selected: player.stay }" @click="setStay">Stay</div>
         </div>
 
       </div> <!-- Fine Board Player  -->
@@ -70,7 +70,9 @@
           <div class="cards">
             <Card v-for="c in p.hand" :key="c" :card="c" />
           </div>
-          {{ p.name }}
+          <div v-if="p.hand.length > 1">
+            {{ p.name }}
+          </div>
         </div>
       </div>
 
@@ -246,7 +248,7 @@ export default {
   --error: #CF6679;
   --background: #0e0e0e;
   --surface: #2a2a2a;
-  --surface-hover: #404040;
+  --surface-hover: #40404079;
   --surface-border: #565656;
   --on-primary: #000000;
   --on-secondary: #000000;
@@ -399,6 +401,7 @@ body {
   padding: 3vh 3vw 3vh;
   font-size: 1vw;
   transition-duration: 120ms;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 .btn:hover {
   background-color: var(--surface-hover);
@@ -422,6 +425,7 @@ body {
   width: 4.5vw;
   border-radius: 100vh;
   font-size: 1vw;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Lista Players */
@@ -433,6 +437,10 @@ body {
   background-color: var(--surface-hover);
   border: 2px solid var(--surface-border);
   left: 3vw;
+  top: 4vh;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 /* Effetti e color */

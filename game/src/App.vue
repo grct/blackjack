@@ -11,7 +11,7 @@
   </div>
   <div class="playerlist">
     <h1 style="text-align: left">Players:</h1>
-    <div class="player" v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span></div>
+    <div class="player" v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
   </div>
   <!-- GIOCO -->
   <div v-if="name.length >= 3">
@@ -132,18 +132,18 @@ export default {
       }, 1000)
       if(r == 'table'){
         this.history.push('Persa')
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(207,102,121,1) 0%, rgba(14,14,14,1) 100%)'
+        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(251,53,53,1) 0%, rgba(14,14,14,0) 100%)'
       }
         
       if(r == 'player'){
         this.history.push('Vinta')
         this.$refs.confetti.start()
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 0%, rgba(14,14,14,1) 100%)'
+        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 2%, rgba(14,14,14,1) 100%)'
       }
 
       if(r == 'tie'){
         this.history.push('Patta')
-        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(255,255,255,0.5956976540616247) 0%, rgba(14,14,14,1) 100%)'
+        document.getElementById('game').style.background = 'linear-gradient(0deg, rgba(255,255,255,0.5956976540616247) 3%, rgba(14,14,14,1) 100%)'
       }
 
       setTimeout(function(){
@@ -357,5 +357,7 @@ body {
 .error {
   color: var(--error) !important;
 }
-
+.ties {
+  color: #b1b1b1 !important;
+}
 </style>

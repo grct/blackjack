@@ -180,7 +180,7 @@ const newRound = () => {
   let i
 
   // Se i giocatori NON hanno finito di pescare
-  if(!players.every(isStaying)){
+  if(!players.every(isStaying) && table.hand.length < 2){
     time_left = 15
     io.emit("updateTimeout", time_left);
     return
@@ -188,7 +188,6 @@ const newRound = () => {
 
   // Il tavolo pesca
   if(table.score < 17 && table.hand.length > 0){
-
     // while(table.score < 17 && table.hand.length > 0){
       // time_left = 20
       // io.emit("updateTimeout", time_left);
@@ -288,18 +287,19 @@ const checkWinners = () => {
     if(result.length < 3){
       if(table.score > 21){
         result = 'player'
-        console.log('p')
         p.wins++
+      }
+      else if(table.score === p.score){
+        result = 'tie'
+        p.ties++
       }
       else if(table.score >= 17 && table.score <= 21)
         if(p.score > table.score && p.score <= 21){
           result = 'player'
-          console.log('p')
           p.wins++
         }
         else {
           result = 'table'
-          console.log('t')
           p.loses++
         }
     }

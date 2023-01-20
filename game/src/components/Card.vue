@@ -50,12 +50,12 @@ export default {
 
 <style scoped>
     canvas {
-    width: 9vw;
-    height: 12vw;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-}
+        width: 9vw;
+        height: 12vw;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+    }
 </style>
 
 <!-- 

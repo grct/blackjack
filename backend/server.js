@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
         console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         let p = players.find(p => p.id === socket.id);
+        io.to(p.id).emit("updateId", socket.id);
         io.to(p.id).emit("updateTimeout", time_left);
         if(players.length > 0){
           // setTimeout(function(){

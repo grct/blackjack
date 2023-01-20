@@ -26,8 +26,9 @@
 - [X] Fixare bug (ogni tanto il banco pesca all'infinito)
 - [X] Migliorare algoritmo trova-vincitore
 - [ ] Sezione Admin con visualizzazione di tutti i dati
-- [ ] Mostrare anche le mani degli altri giocatori
-- [ ] Limitare i player a 7
+- [X] Mostrare anche le mani degli altri giocatori
+- [X] Indicatore nella playerlist tramite ID
+- [ ] Possibilità di cambiare nome
 - [X] Gestione punteggio Asso (1 / 11)
 - [X] Differenziare 21 da Blackjack (Asso + carta)
 - [X] Animazioni
@@ -36,6 +37,7 @@
 - [X] Responsive
 - [ ] Completare readme
 - [ ] Pulizia codice finale + commenti
+- [ ] Versione mobile
 
   
   

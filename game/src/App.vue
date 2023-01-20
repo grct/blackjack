@@ -11,7 +11,7 @@
   </div>
   <div class="playerlist">
     <h1 style="text-align: left">Players:</h1>
-    <div class="player" v-for="p in players" :key="p.id">{{ p.name == this.name ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
+    <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
   </div>
   <!-- GIOCO -->
   <div v-if="name.length >= 3">
@@ -28,13 +28,16 @@
       <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
     </div>
     <div class="player-board" v-if="hand.length > 1">
-      <!-- <h1>Le tue carte:</h1> -->
-      <div class="cards">
-        <Card v-for="c in hand" :key="c" :card="c" />
-      </div>
-      <p style="font-size: 0.8vw">
-        {{ score }}
-      </p>
+      <div class="player-hand">
+        <div>
+          <div class="cards">
+            <Card v-for="c in hand" :key="c" :card="c" />
+          </div>
+          <p style="font-size: 0.8vw">
+            {{ score }}
+          </p>
+        </div>
+      </div> 
       <div class="btns">
         <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
         <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
@@ -43,8 +46,15 @@
         </div>
       </div>
     </div>
-    <div id="game" class="game">
+    <div class="otherplayers">
+      <div v-for="p in otherPlayers.slice(0, 4)" :key="p.id">
+        <div class="cards">
+          <Card v-for="c in p.hand" :key="c" :card="c" />
+        </div>
+        {{ p.name }}
+      </div>
     </div>
+    <div id="game" class="game" />
   </div>
   <!-- <div class="playerlist">
     <h1>Giocatori:</h1>
@@ -65,6 +75,7 @@ export default {
       hand: [],
       temp: '',
       name: '',
+      id: '',
       logged: false,
       stay: true,
       table: [],
@@ -99,6 +110,9 @@ export default {
           s += parseInt(c.value)
         })
       return s
+    },
+    otherPlayers(){
+      return this.players.filter(p => p.id != this.id)
     }
   },
   sockets: {
@@ -110,6 +124,9 @@ export default {
     },
     disconnected() {
       console.log("Disconnesso dal server")
+    },
+    updateId(id){
+      this.id = id
     },
     updatePlayers(players) {
       this.players = players
@@ -365,5 +382,46 @@ body {
 }
 .ties {
   color: #b1b1b1 !important;
+}
+.player-hand {
+  z-index: 10;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 1vw;
+}
+.player-hand > div { grid-area: 1 / 3 / 2 / 4; }
+.otherplayers {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  /* gap: 4vw; */
+  /* margin: 0 3vw 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  /* grid-template-rows: repeat(5, 1fr); */
+  grid-column-gap: 1vw;
+  /* grid-row-gap: 1vw; */
+  z-index: 1;
+}
+.otherplayers > * > .cards > * > canvas {
+  width: 6vw;
+  height: 8vw;
+}
+.otherplayers > *:nth-child(1) {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.otherplayers > *:nth-child(2) {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.otherplayers > *:nth-child(3) {
+  grid-area: 1 / 4 / 2 / 5;
+}
+.otherplayers > *:nth-child(4) {
+  grid-area: 1 / 5 / 2 / 6;
 }
 </style>

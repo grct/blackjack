@@ -25,22 +25,24 @@
 - [X] Messaggio di attesa per chi entra nel mezzo di un turno
 - [X] Fixare bug (ogni tanto il banco pesca all'infinito)
 - [X] Migliorare algoritmo trova-vincitore
-- [ ] Sezione Admin con visualizzazione di tutti i dati
 - [X] Mostrare anche le mani degli altri giocatori
 - [X] Indicatore nella playerlist tramite ID
-- [ ] Possibilità di cambiare nome
 - [X] Gestione disconnessione
 - [X] Migliorare rendering condizionale
 - [X] Gestione punteggio Asso (1 / 11)
 - [X] Differenziare 21 da Blackjack (Asso + carta)
 - [X] Animazioni
 - [X] Effetti alla vittoria
-- [ ] Migliorare CSS
-- [ ] Animazione blackjack
 - [X] Responsive
-- [ ] Completare readme
-- [ ] Pulizia codice finale + commenti
+- [ ] Possibilità di cambiare nome
+- [ ] Animazione blackjack
 - [ ] Versione mobile
+- [ ] Migliorare CSS
+- [ ] Pulizia codice finale + commenti
+- [ ] Deploy
+- [ ] Logo quadrato per GIT
+- [ ] Completare readme
+- [ ] (?) Sezione Admin con visualizzazione di tutti i dati
 
   
   

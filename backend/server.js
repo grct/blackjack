@@ -173,7 +173,7 @@ const updateTimer = () => {
 const newRound = () => {
   let i
 
-  if(deck.length < 20)
+  if(deck.length < 60)
     deck += createDeck()
 
   // Se i giocatori NON hanno finito di pescare

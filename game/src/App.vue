@@ -28,7 +28,7 @@
       <!-- Lista players -->
       <div class="playerlist">
         <h1 style="text-align: left">Players:</h1>
-        <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
+        <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.player.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
       </div>
 
       <!-- Tavolo -->

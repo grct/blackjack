@@ -24,12 +24,12 @@
 - [X] Gestire Nome via Cache
 - [X] Messaggio di attesa per chi entra nel mezzo di un turno
 - [X] Fixare bug (ogni tanto il banco pesca all'infinito)
-- [ ] Migliorare algoritmo trova-vincitore
+- [X] Migliorare algoritmo trova-vincitore
 - [ ] Sezione Admin con visualizzazione di tutti i dati
 - [ ] Mostrare anche le mani degli altri giocatori
 - [ ] Limitare i player a 7
 - [X] Gestione punteggio Asso (1 / 11)
-- [ ] Differenziare 21 da Blackjack (Asso + carta)
+- [X] Differenziare 21 da Blackjack (Asso + carta)
 - [X] Animazioni
 - [X] Effetti alla vittoria
 - [ ] Migliorare CSS

@@ -1,35 +1,47 @@
 <template>
 <div>
   <Error :error="error" v-if="error.length > 1"/>
-  <div class="game" v-if="error == ''">
-    <Confetti ref="confetti"/>
-    <div class="head">
-      <img src="@/assets/logo.png" alt="logo" class="logo">
-    </div>
-    <div class="choosename" v-if="name.length < 3 || !logged">
-      <h1>Scegli un nome</h1>
-      <input type="text" v-model="temp">
-      <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
-    </div>
-    <div class="playerlist">
-      <h1 style="text-align: left">Players:</h1>
-      <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
-    </div>
-    <!-- GIOCO -->
-    <div v-if="name.length >= 3">
-      <div class="table" v-if="table.hand">
-        <!-- <h1>Tavolo</h1> -->
-        <p style="font-size: 0.8vw">{{ table.score }}</p>
-        <div class="cards">
-        <Card v-for="c in table.hand" :key="c" :card="c" />
+  <!-- Container del Gioco - Visibile solo se connessi al socket -->
+  <div class="container" v-if="error == ''">
+    <Confetti ref="confetti"/> <!-- Animazioni -->
+
+    <div class="pregame"> <!-- Pre partita -->
+      <div class="head"> <!-- Header -->
+        <img src="@/assets/logo.png" alt="logo" class="logo">
       </div>
+
+      <!-- Input seleziona nome -->
+      <div class="choosename" v-if="name.length < 3 || !logged">
+        <h1>Scegli un nome</h1>
+        <input type="text" v-model="temp">
+        <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
       </div>
-      <!-- OVERLAY -->
+    </div>
+
+    <div class="game" v-if="name.length >= 3"> <!-- Partita -->
+      
+      <!-- Attesa del tuo turno -->
       <div class="notplaying" v-if="hand.length < 1 || !logged">
         <h1>Giocherai dal prossimo round</h1>
-        <!-- <p class="notplaying-timeout">{{ timeout }}</p> -->
       </div>
+
+      <!-- Lista players -->
+      <div class="playerlist">
+        <h1 style="text-align: left">Players:</h1>
+        <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
+      </div>
+
+      <!-- Tavolo -->
+      <div class="table" v-if="table.hand">
+        <p style="font-size: 0.8vw">{{ table.score }}</p>
+        <div class="cards">
+          <Card v-for="c in table.hand" :key="c" :card="c" />
+        </div>
+      </div>
+
+      <!-- Board Player -->
       <div class="player-board" v-if="hand.length > 1">
+        <!-- Mano Player -->
         <div class="player-hand">
           <div>
             <div class="cards">
@@ -39,7 +51,9 @@
               {{ score }}
             </p>
           </div>
-        </div> 
+        </div>
+
+        <!-- Comandi -->
         <div class="btns">
           <div class="btn" :class="{ selected: !stay }" @click="setDraw">Draw</div>
           <div class="btn" :class="{ selected: stay }" @click="setStay">Stay</div>
@@ -47,7 +61,10 @@
             {{ timeout }}
           </div>
         </div>
-      </div>
+
+      </div> <!-- Fine Board Player  -->
+
+      <!-- Board Altri Players -->
       <div class="otherplayers">
         <div v-for="p in otherPlayers.slice(0, 4)" :key="p.id">
           <div class="cards">
@@ -56,10 +73,11 @@
           {{ p.name }}
         </div>
       </div>
-      <div class="background-effects" ref="backgroundEffects" />
-      </div>
-  </div>
-</div>
+
+      <div class="background-effects" ref="backgroundEffects" /> <!-- Animazioni  -->
+    </div> <!-- Fine Game  -->
+  </div> <!-- Fine Container  -->
+</div> <!-- Fine componente  -->
 </template>
 
 <script>

@@ -27,12 +27,6 @@ export default {
             if(this.card.suit == 'picche')
                 return -141
             return -0
-        },
-        coords(){
-            return {
-                x: -455,
-                y: -141
-            }
         }
     },
     props: {

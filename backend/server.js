@@ -260,37 +260,50 @@ const isStaying = (p, index, array) => {
 
 const checkWinners = () => {
   players.forEach(p => {
-    let result = null
-    // Entrambi blacjack
-    if(p.score == 21 && table.score == 21){
+    let result = ''
+    let bj = {
+      t: false,
+      p: false
+    }
+
+    // Determina blackjack
+    if(table.score === 21 && table.hand.length === 2)
+      bj.t = true;
+    if(p.score === 21 && p.hand.length === 2)
+      bj.p = false;
+
+    if(bj.t && bj.p){
       result = 'tie'
       p.ties++
     }
-    // Player Blackjack
-    if(p.score == 21 && table.score != 21){
-      result = 'player'
-      p.wins++
-    }
-    // Tavolo blackjakc
-    if(p.table == 21 && p.score != 21){
+    else if(bj.t){
       result = 'table'
       p.loses++
     }
-    // Player si avvicina a 21
-    if(p.score > table.score && p.score < 21){
+    else if(bj.p){
       result = 'player'
       p.wins++
     }
-    // Tabolo si avvicina a 21
-    if(table.score > p.score && table.score < 21){
-      result = 'table'
-      p.loses++
+
+    if(result.length < 3){
+      if(table.score > 21){
+        result = 'player'
+        console.log('p')
+        p.wins++
+      }
+      else if(table.score >= 17 && table.score <= 21)
+        if(p.score > table.score && p.score <= 21){
+          result = 'player'
+          console.log('p')
+          p.wins++
+        }
+        else {
+          result = 'table'
+          console.log('t')
+          p.loses++
+        }
     }
-    // Entrambi sopra 21
-    if(p.score > 21 && table.score > 21){
-      result = 'tie'
-      p.ties++
-    }
+
     io.to(p.id).emit("showResult", result);
     io.emit("updatePlayers", players);
   })

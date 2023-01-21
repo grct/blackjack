@@ -7,7 +7,7 @@ import VueConfetti from 'vue-confetti'
 
 createApp(App).use(VueConfetti).use(new VueSocketIO({
     debug: false,
-    connection: SocketIO('http://localhost:3000', {
+    connection: SocketIO('http://blackjack-backend-seven.vercel.app:3000', {
         // you use any options form here https://socket.io/docs/client-api/#new-Manager-url-options
         reconnection: true,
         reconnectionAttempts: 3,

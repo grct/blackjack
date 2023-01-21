@@ -11,7 +11,7 @@
       </div>
 
       <!-- Input seleziona nome -->
-      <div class="choosename" v-if="player.name.length < 3 || !player.logged">
+      <div class="choosename" v-if="player.name.length < 3">
         <h1>Scegli un nome</h1>
         <input type="text" v-model="temp">
         <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
@@ -21,7 +21,7 @@
     <div class="game" v-if="player.name.length >= 3"> <!-- Partita -->
       
       <!-- Attesa del tuo turno -->
-      <div class="notplaying" v-if="player.hand.length < 1 || !player.logged">
+      <div class="notplaying" v-if="player.hand.length < 1">
         <h1>Giocherai dal prossimo round</h1>
       </div>
 
@@ -206,7 +206,7 @@ export default {
         this.player.name = this.temp
         this.player.ogged = true
         localStorage.name = JSON.stringify(this.player.name)
-        localStorage.logged = JSON.stringify(this.player.logged)
+        // localStorage.logged = JSON.stringify(this.player.logged)
         this.$socket.emit("joinGame", this.player.name);
       }
     },
@@ -227,7 +227,7 @@ export default {
     // Cache
     if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2){
       this.player.name = JSON.parse(localStorage.name)
-      this.player.logged = JSON.parse(localStorage.logged)
+      // this.player.logged = JSON.parse(localStorage.logged)
     }
   }
 }
@@ -302,7 +302,6 @@ body {
 
 /* Overlay attesa prossimo turno */
 .notplaying {
-  background-color: #00000041;
   top: 30%;
   width: 100%;
   font-size: 0.8vw;
@@ -314,6 +313,12 @@ body {
   height: 150px;
   position: absolute;
   z-index: 99;
+
+  background: rgba(0, 0, 0, 0.44);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.2px);
+  -webkit-backdrop-filter: blur(4.2px);
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 .notplaying-timeout {
   font-size: 4rem;

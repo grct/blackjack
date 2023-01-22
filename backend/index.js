@@ -25,12 +25,11 @@ let deck = [];
 let currentPlayer = 0;
 
 app.get('/'), (req, res)=>res.json({message: "ok"})
-context.log(200)
 
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [], score: 0, stay: true, wins: 0, loses: 0, ties: 0 });
-        console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
+        context.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         let p = players.find(p => p.id === socket.id);
         io.to(p.id).emit("updateId", socket.id);
@@ -57,7 +56,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`(${players.length}) Left: ${socket.id}`)
+        context.log(`(${players.length}) Left: ${socket.id}`)
         // Rimuovi giocatore dalla lista
         const index = players.findIndex((player) => player.id === socket.id);
         players.splice(index, 1);
@@ -67,7 +66,7 @@ io.on("connection", (socket) => {
 
     // socket.on("draw", () => {
     //   let p = players.find(p => p.id === socket.id);
-    //   console.log(p.name + " is drawing")
+    //   context.log(p.name + " is drawing")
     //   drawCard(p);
     // })
 });
@@ -99,7 +98,7 @@ const shuffleDeck = (deck) => {
 
 // Pesca una carta
 const drawCard = (p) => {
-  // console.log('Utente pesca!')
+  // context.log('Utente pesca!')
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -108,8 +107,8 @@ const drawCard = (p) => {
 
 const tableDraw = () => {
   table.hand.push(deck.pop());
-  console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
-  console.log(deck.length +  ' Carte rimanenti')
+  context.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
+  context.log(deck.length +  ' Carte rimanenti')
   table.score = calcScore(table.hand)
   io.emit("updateTable", table);
 }
@@ -132,7 +131,7 @@ const newTable = () => {
 
 const giveCards = () => {
   players.forEach(p => {
-    // console.log("Dando mano a: " + p.name)
+    // context.log("Dando mano a: " + p.name)
       p.hand = [];
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
@@ -147,7 +146,7 @@ const startGame = () => {
     return
   deck = createDeck();
   deck = shuffleDeck(deck);
-  console.log('Game started!')
+  context.log('Game started!')
   // Primo giro
   newRound();
   timer = setInterval(updateTimer, 1000);
@@ -159,7 +158,7 @@ const updateTimer = () => {
   // if(players.length < 1) {
   //   clearInterval(timer)
   //   timer = false
-  //   console.log('Round interrotto')
+  //   context.log('Round interrotto')
   //   return
   // }
   // Se il tempo è finito
@@ -175,7 +174,7 @@ const newRound = () => {
   let i
 
   if(deck.length < 60){
-    console.log("New deck added!")
+    context.log("New deck added!")
     let d = createDeck()
     d = shuffleDeck(d)
     deck.concat(d)
@@ -215,7 +214,7 @@ const newRound = () => {
   // Nuovo round da 0
   time_left = 15
   round++;
-  console.log('New round! ' + round)
+  context.log('New round! ' + round)
   newTable()
   giveCards()
   io.emit("updateTimeout", time_left);
@@ -319,5 +318,5 @@ const checkWinners = () => {
 }
 
 server.listen(process.env.PORT || 3000, () => {
-  console.log("Server listening online");
+  context.log("Server listening online");
 });

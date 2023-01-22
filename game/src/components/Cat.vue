@@ -16,7 +16,7 @@ export default {
             frameX: 0,
             frameY: 14,
             gameFrame: 0,
-            staggerFrames: 6,
+            staggerFrames: 7,
         }
     },
     computed: {

@@ -18,10 +18,10 @@ const table = {
   score: 0
 };
 const players = [];
+var deck = [];
 let timer = undefined;
 let time_left = 0;
 let round = 0;
-let deck = [];
 let currentPlayer = 0;
 
 app.get('/'), (req, res)=>res.json({message: "ok"})
@@ -29,7 +29,7 @@ app.get('/'), (req, res)=>res.json({message: "ok"})
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [], score: 0, stay: true, wins: 0, loses: 0, ties: 0 });
-        context.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
+        console.log(`(${players.length}) Joined: ${socket.id} | Name: ${name}`)
         io.emit("updatePlayers", players);
         let p = players.find(p => p.id === socket.id);
         io.to(p.id).emit("updateId", socket.id);
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        context.log(`(${players.length}) Left: ${socket.id}`)
+        console.log(`(${players.length}) Left: ${socket.id}`)
         // Rimuovi giocatore dalla lista
         const index = players.findIndex((player) => player.id === socket.id);
         players.splice(index, 1);
@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 
     // socket.on("draw", () => {
     //   let p = players.find(p => p.id === socket.id);
-    //   context.log(p.name + " is drawing")
+    //   console.log(p.name + " is drawing")
     //   drawCard(p);
     // })
 });
@@ -76,29 +76,28 @@ io.on("connection", (socket) => {
 const suits = ["spade", "cuori", "quadri", "picche"];
 const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
-const createDeck = () => {
-  let d = [];
+const newDeck = () => {
+  // let d = [];
   for(let i=0; i<4; i++)
     for (let suit of suits) {
       for (let value of values) {
         deck.push({ suit, value });
       }
     }
-  return d;
+  // return d;
 };
 
 // MESCOLA MAZZO
-const shuffleDeck = (deck) => {
+const shuffleDeck = () => {
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
-    return deck;
 };
 
 // Pesca una carta
 const drawCard = (p) => {
-  // context.log('Utente pesca!')
+  // console.log('Utente pesca!')
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
@@ -107,8 +106,8 @@ const drawCard = (p) => {
 
 const tableDraw = () => {
   table.hand.push(deck.pop());
-  context.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
-  context.log(deck.length +  ' Carte rimanenti')
+  console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
+  console.log(deck.length +  ' Carte rimanenti')
   table.score = calcScore(table.hand)
   io.emit("updateTable", table);
 }
@@ -131,7 +130,7 @@ const newTable = () => {
 
 const giveCards = () => {
   players.forEach(p => {
-    // context.log("Dando mano a: " + p.name)
+    // console.log("Dando mano a: " + p.name)
       p.hand = [];
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
@@ -144,9 +143,11 @@ const giveCards = () => {
 const startGame = () => {
   if(timer)
     return
-  deck = createDeck();
-  deck = shuffleDeck(deck);
-  context.log('Game started!')
+  // deck = createDeck();
+  newDeck()
+  shuffleDeck();
+  // console.log(deck)
+  console.log('Game started!')
   // Primo giro
   newRound();
   timer = setInterval(updateTimer, 1000);
@@ -158,7 +159,7 @@ const updateTimer = () => {
   // if(players.length < 1) {
   //   clearInterval(timer)
   //   timer = false
-  //   context.log('Round interrotto')
+  //   console.log('Round interrotto')
   //   return
   // }
   // Se il tempo è finito
@@ -174,10 +175,11 @@ const newRound = () => {
   let i
 
   if(deck.length < 60){
-    context.log("New deck added!")
-    let d = createDeck()
-    d = shuffleDeck(d)
-    deck.concat(d)
+    console.log("New deck added!")
+    // let d = createDeck()
+    newDeck()
+    shuffleDeck()
+    console.log(deck)
   }
 
   // Se i giocatori NON hanno finito di pescare
@@ -214,7 +216,7 @@ const newRound = () => {
   // Nuovo round da 0
   time_left = 15
   round++;
-  context.log('New round! ' + round)
+  console.log('New round! ' + round)
   newTable()
   giveCards()
   io.emit("updateTimeout", time_left);
@@ -318,5 +320,5 @@ const checkWinners = () => {
 }
 
 server.listen(process.env.PORT || 3000, () => {
-  context.log("Server listening online");
+  console.log("Server listening online");
 });

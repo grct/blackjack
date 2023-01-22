@@ -4,7 +4,6 @@
   <!-- Container del Gioco - Visibile solo se connessi al socket -->
   <div class="container" v-if="error == ''">
     <Confetti ref="confetti"/> <!-- Animazioni -->
-
     <div class="pregame"> <!-- Pre partita -->
       <div class="head"> <!-- Header -->
         <img src="@/assets/logo.png" alt="logo" style="width: 18vw">
@@ -98,7 +97,7 @@ export default {
         name: '',
         logged: '',
         hand: '',
-        stay: '',
+        stay: true,
         history: []
       },
       temp: '',
@@ -182,7 +181,7 @@ export default {
       }
         
       if(r == 'player'){
-        this.history.push('Win')
+        this.player.history.push('Win')
         this.$refs.confetti.start()
         this.$refs.backgroundEffects.style.background = 'linear-gradient(0deg, rgba(54,0,179,1) 2%, rgba(14,14,14,1) 100%)'
       }

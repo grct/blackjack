@@ -75,14 +75,14 @@ const suits = ["spade", "cuori", "quadri", "picche"];
 const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 const createDeck = () => {
-  const deck = [];
+  let d = [];
   for(let i=0; i<4; i++)
     for (let suit of suits) {
       for (let value of values) {
         deck.push({ suit, value });
       }
     }
-  return deck;
+  return d;
 };
 
 // MESCOLA MAZZO
@@ -107,8 +107,6 @@ const tableDraw = () => {
   table.hand.push(deck.pop());
   console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
   console.log(deck.length +  ' Carte rimanenti')
-  if(table.hand[table.hand.length-1] == undefined)
-    console.log(deck)
   table.score = calcScore(table.hand)
   io.emit("updateTable", table);
 }
@@ -173,8 +171,12 @@ const updateTimer = () => {
 const newRound = () => {
   let i
 
-  if(deck.length < 60)
-    deck += createDeck()
+  if(deck.length < 60){
+    console.log("New deck added!")
+    let d = createDeck()
+    d = shuffleDeck(d)
+    deck.concat(d)
+  }
 
   // Se i giocatori NON hanno finito di pescare
   if(!players.every(isStaying) && table.hand.length < 2){
@@ -264,6 +266,10 @@ const checkWinners = () => {
       t: false,
       p: false
     }
+
+    // Mano vuota
+    if(p.hand.length < 2)
+      return
 
     // Determina blackjack
     if(table.score === 21 && table.hand.length === 2)

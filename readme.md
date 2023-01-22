@@ -34,6 +34,7 @@
 - [X] Animazioni
 - [X] Effetti alla vittoria
 - [X] Responsive
+- [ ] Nome finestra e Favicon
 - [ ] Possibilità di cambiare nome
 - [ ] Animazione blackjack
 - [ ] Versione mobile

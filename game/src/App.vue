@@ -1,5 +1,6 @@
 <template>
 <div>
+  <title>Blackjack JS</title>
   <Error :error="error" v-if="error.length > 1"/>
   <!-- Container del Gioco - Visibile solo se connessi al socket -->
   <div class="container" v-if="error == ''">
@@ -228,6 +229,7 @@ export default {
       this.player.name = JSON.parse(localStorage.name)
       // this.player.logged = JSON.parse(localStorage.logged)
     }
+
   }
 }
 </script>

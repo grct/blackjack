@@ -30,6 +30,8 @@
 ![sceglinome](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/scegli-nome.png)
 ![multiplayer](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/multiplayer.png)
 ![vittoria](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/vittoria.png)
+![offline](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/offline.png)
+
 ## Tecnologie
 
 - Vue 3 (Javascript Framework)

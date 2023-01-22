@@ -25,6 +25,7 @@ let deck = [];
 let currentPlayer = 0;
 
 app.get('/'), (req, res)=>res.json({message: "ok"})
+context.log(200)
 
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {

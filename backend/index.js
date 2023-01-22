@@ -24,6 +24,8 @@ let round = 0;
 let deck = [];
 let currentPlayer = 0;
 
+app.get('/'), (req, res)=>res.json({message: "ok"})
+
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [], score: 0, stay: true, wins: 0, loses: 0, ties: 0 });
@@ -315,6 +317,6 @@ const checkWinners = () => {
   })
 }
 
-server.listen(3000, () => {
-  console.log("Server listening on port 3000");
+server.listen(process.env.PORT || 3000, () => {
+  console.log("Server listening online");
 });

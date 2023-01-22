@@ -6,6 +6,13 @@
 ###  Link utili
  - [Gioco (blackjackjs,it)](https://www.blackjackjs.it/)
  - [Repo Github](https://github.com/grct/blackjack)
+ - [Features](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#features)
+ - [Screenshots](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#screenshots)
+ - [Tecnologie](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#tecnologie)
+ - [Deploy](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#deploy)
+ - [To-do](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#to-do)
+ - [Grafiche](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#grafiche)
+ 
 
 ## Features
 

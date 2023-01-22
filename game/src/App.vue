@@ -377,7 +377,7 @@ body {
 .cards {
   display: flex;
   align-items: center;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   margin: 2vh 0 2vh;
 }
 .cards *:first-child {

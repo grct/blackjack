@@ -1,6 +1,5 @@
 <template>
 <div>
-  <title>Blackjack JS</title>
   <Error :error="error" v-if="error.length > 1"/>
   <!-- Container del Gioco - Visibile solo se connessi al socket -->
   <div class="container" v-if="error == ''">
@@ -89,6 +88,9 @@ import Error from './components/Error.vue'
 export default {
   components: { Card, Confetti, Error },
   name: 'App',
+  metaInfo: {
+      title: 'Blackjack JS',
+  },
   data(){
     return {
       table: [],

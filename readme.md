@@ -31,14 +31,14 @@
 ![multiplayer](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/multiplayer.png)
 ![vittoria](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/vittoria.png)
 ![offline](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/offline.png)
+![download](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/install.PNG)
+![app](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/app.PNG)
 ![mobile](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/mobile_1.PNG)
 
 ## Tecnologie
 
 - Vue 3 (Javascript Framework)
-
 - Node JS (Backend)
-
 - SocketIO (Gestione dei Sockets)
 
 ## Deploy

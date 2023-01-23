@@ -17,13 +17,14 @@
 ## Features
 
  - Multiplayer (Numero giocatori illimitato)
+ - Web App Scaricabile
+ - Giocabile anche da mobile
  - Tutte le meccaniche del classico Blackjack
  - Possibilità di vedere la mano degli altri giocatori
  - Effetti animati nel corso della partita
  - Gestione della cache e salvataggio del nome
  - Sistema anti-conteggio carte
  - Dominio personalizzato e certificato HTTPS
- - *Versione mobile **(in arrivo)***
  - *Chat con gli altri giocatori **(in arrivo)***
 
 ## Screenshots
@@ -31,9 +32,9 @@
 ![multiplayer](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/multiplayer.png)
 ![vittoria](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/vittoria.png)
 ![offline](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/offline.png)
-![download](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/install.PNG)
+![download](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/install.png)
 ![app](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/app.png)
-![mobile](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/mobile_1.png)
+![mobile](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/mobile_1.PNG)
 
 ## Tecnologie
 

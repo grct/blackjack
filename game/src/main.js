@@ -3,6 +3,7 @@ import App from './App.vue'
 import VueSocketIO from 'vue-3-socket.io'
 import SocketIO from 'socket.io-client'
 import VueConfetti from 'vue-confetti'
+import './registerServiceWorker'
 
 
 createApp(App).use(VueConfetti).use(new VueSocketIO({

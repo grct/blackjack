@@ -21,18 +21,18 @@
       
       <!-- Attesa del tuo turno -->
       <div class="notplaying" v-if="player.hand.length < 1">
-        <h1>Giocherai dal prossimo round</h1>
+        <h1>You will play from the next round</h1>
       </div>
 
-      <!-- Lista players -->
-      <div class="playerlist">
+      <!-- Lista players DESKTOP -->
+      <div class="playerlist" v-if="player.hand.length > 1">
         <h1 style="text-align: left">Players:</h1>
         <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.player.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
       </div>
 
       <!-- Tavolo -->
       <div class="table" v-if="table.hand">
-        <p style="font-size: 0.8vw">{{ table.score }}</p>
+        <p class="score">{{ table.score }}</p>
         <div class="cards">
           <Card v-for="c in table.hand" :key="c" :card="c" />
         </div>
@@ -46,25 +46,26 @@
             <div class="cards">
               <Card v-for="c in player.hand" :key="c" :card="c" />
             </div>
-            <p style="font-size: 0.8vw">
+            <p class="score">
               {{ score }}
             </p>
           </div>
         </div>
 
         <!-- Comandi -->
-        <div class="btns">
-          <div class="btn" :class="{ selected: !player.stay }" @click="setDraw">Draw</div>
-          <div class="timeout">
-            {{ timeout }}
+        <div class="btns-wrapper">
+          <div class="btns">
+            <div class="btn" :class="{ selected: !player.stay }" @click="setDraw">Draw</div>
+            <div class="timeout">{{ timeout }}</div>
+            <div class="btn" :class="{ selected: player.stay }" @click="setStay">Stay</div>
+            <div class="timeout-mobile">{{ timeout }}</div>
           </div>
-          <div class="btn" :class="{ selected: player.stay }" @click="setStay">Stay</div>
         </div>
 
       </div> <!-- Fine Board Player  -->
 
       <!-- Board Altri Players -->
-      <div class="otherplayers">
+      <div class="otherplayers" v-if="player.hand.length > 1">
         <div v-for="p in otherPlayers.slice(0, 4)" :key="p.id">
           <div class="cards">
             <Card v-for="c in p.hand" :key="c" :card="c" />
@@ -74,6 +75,29 @@
           </div>
         </div>
       </div>
+
+      <div class="footer-mobile"> 
+      <!-- Lista players MOBILE -->
+        <div class="playerlist-mobile-wrapper">
+          <div class="playerlist-mobile" v-if="player.hand.length > 1">
+            <h1 style="text-align: left">Players:</h1>
+            <div class="player" v-for="p in players" :key="p.id">{{ p.id == this.player.id ? "(Tu) " + p.name : p.name }} > <span class="primary">{{ p.wins }}</span> | <span class="error">{{ p.loses }}</span> | <span class="ties">{{ p.ties }}</span></div>
+          </div>
+        </div>
+
+        <!-- Board Altri Players MOBILE -->
+        <div class="otherplayers-mobile" v-if="player.hand.length > 1">
+          <div v-for="p in otherPlayers.slice(0, 6)" :key="p.id">
+            <div class="cards">
+              <Card v-for="c in p.hand" :key="c" :card="c" />
+            </div>
+            <div v-if="p.hand.length > 1">
+              {{ p.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="background-effects" ref="backgroundEffects" /> <!-- Animazioni  -->
     </div> <!-- Fine Game  -->
@@ -260,6 +284,66 @@ export default {
   --on-error: #000000;
   --text: var(--on-surface);
 }
+/* Mobile */
+@media only screen and (max-width: 768px) {
+  * {
+    overflow-y: auto !important;
+  }
+  .head {
+    height: auto !important;
+    margin-bottom: 6vh;
+  }
+  .head > * {
+    width: 30vw !important;
+    padding: 2vh 0 2vh;
+  }
+  .footer-mobile {
+    display: flex !important;
+  }
+  .notplaying {
+    font-size: 0.5rem !important;
+  }
+  .notplaying > h1 {
+    padding: 0 3vw 0 !important;
+  }
+  .btns {
+    flex-direction: column;
+    gap: 1.5vh !important;
+  }
+  .btn {
+    font-size: 1rem !important;
+    padding: 2vh 10vw 2vh !important;
+  }
+  .timeout {
+    display: none !important;
+  }
+  .timeout-mobile {
+    display: flex !important;
+  }
+  .score {
+    font-size: 2.8vw !important;
+  }
+  .player-hand {
+    display: flex !important;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .player {
+    font-size: 0.5rem !important;
+  }
+  .playerlist {
+    display: none !important;
+  }
+  .playerlist-mobile {
+    display: block !important;
+  }
+  .otherplayers {
+    display: none !important;
+  }
+  .otherplayers-mobile {
+    display: flex !important;
+  }
+}
 body {
   background-color: var(--background);
 }
@@ -279,6 +363,16 @@ body {
   justify-content: center;
   align-items: center;
   height: 15vh;
+}
+.footer-mobile {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 100vh;
+  width: 100%;
+  margin-top: 10vh;
 }
 
 /* Selezione del nome */
@@ -312,8 +406,9 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   gap: 3vh;
-  height: 150px;
+  padding: 5vh 0vw 5vh;
   position: absolute;
   z-index: 99;
 
@@ -343,11 +438,44 @@ body {
   grid-column-gap: 1vw;
 }
 .player-hand > div { grid-area: 1 / 3 / 2 / 4; }
+.score { font-size: 0.8vw }
 
 /* Banco */
 .table {
   margin: 3vh 0 3vh;
   background: none;
+}
+
+/* Lista Players */
+.playerlist {
+  position: absolute;
+  font-size: 0.7vw;
+  text-align: left;
+  padding: 3vh 2vw 3vh;
+  background-color: var(--surface-hover);
+  border: 2px solid var(--surface-border);
+  left: 3vw;
+  top: 4vh;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.playerlist-mobile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.playerlist-mobile {
+  display: none;
+  font-size: 0.7rem;
+  text-align: left;
+  /* margin: 18vh 2vw 3vh; */
+  padding: 2vh 6vw 2vh;
+  background-color: var(--surface-hover);
+  border: 2px solid var(--surface-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 /* Altri Giocatori */
@@ -376,6 +504,16 @@ body {
 .otherplayers > *:nth-child(4) {
   grid-area: 1 / 5 / 2 / 6;
 }
+.otherplayers-mobile {
+  width: 100%;
+  margin-top: 2vh;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2vh;
+  padding: 6vh 0 6vh;
+}
 
 /* Mano */
 .cards {
@@ -392,6 +530,11 @@ body {
 }
 
 /* Comandi Player */
+.btns-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
 .btns {
   display: flex;
   justify-content: center;
@@ -435,20 +578,17 @@ body {
   font-size: 1vw;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
-
-/* Lista Players */
-.playerlist {
-  position: absolute;
-  font-size: 0.7vw;
-  text-align: left;
-  padding: 3vh 2vw 3vh;
-  background-color: var(--surface-hover);
-  border: 2px solid var(--surface-border);
-  left: 3vw;
-  top: 4vh;
+.timeout-mobile {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-variant-select);
+  border: 2px solid var(--primary-variant);
+  height: 60px;
+  width: 60px;
+  border-radius: 100vh;
+  font-size: 1.1rem;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
 }
 
 /* Effetti e color */

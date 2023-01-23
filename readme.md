@@ -79,11 +79,11 @@
 - [x] Deploy
 - [x] Dominio .it
 - [x] Logo quadrato per GIT
+- [X] Versione mobile
 - [ ] Possibilità di cambiare nome
 - [ ] Divisione mano
 - [ ] Chat
 - [ ] Animazione blackjack
-- [ ] Versione mobile
 - [ ] Migliorare CSS
 - [ ] Pulizia codice finale + commenti
 - [ ] Completare readme

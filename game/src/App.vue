@@ -11,7 +11,7 @@
 
       <!-- Input seleziona nome -->
       <div class="choosename" v-if="player.name.length < 3">
-        <h1>Scegli un nome</h1>
+        <h1>Choose a nickname</h1>
         <input type="text" v-model="temp">
         <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
       </div>

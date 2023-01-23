@@ -53,6 +53,12 @@ export default {
 </script>
     
 <style scoped>
+   @media only screen and (max-width: 768px){
+    canvas {
+        width: 18vh !important;
+        height: 24vh !important;
+    }
+   }
     canvas {
         width: 9vw;
         height: 12vw;

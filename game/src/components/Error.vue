@@ -18,6 +18,14 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-width: 768px){
+  .error-message {
+    font-size: 0.6rem !important;
+  }
+  .error-message > a {
+    font-size: 0.8rem !important;
+  }
+}
 .error-message {
     position: absolute;
     z-index: 150;

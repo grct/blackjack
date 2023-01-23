@@ -43,7 +43,16 @@ io.on("connection", (socket) => {
 
     socket.on("playerStay", (s) => {
       let p = players.find(p => p.id === socket.id);
-      p.stay = s
+
+      // Mano con più carte per capire se qualcuno ha già pescato
+      let highest = Math.max(...players.map(o => o.hand.length))
+      // Se non ha pescato prima, è obbligato a stare
+      if(highest > 2 && p.hand.length <= 2)
+        p.stay = true
+      else
+        p.stay = s
+
+      io.to(p.id).emit("updatePlayerStay", p.stay);
       io.emit("updatePlayers", players);
     });
 
@@ -254,9 +263,6 @@ const isStaying = (p, index, array) => {
     p.stay = true
     io.to(p.id).emit("updatePlayerStay", p.stay);
   }
-
-    
-
   if(index === 0)
       return p.stay
   else

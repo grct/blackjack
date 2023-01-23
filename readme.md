@@ -31,6 +31,7 @@
 ![multiplayer](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/multiplayer.png)
 ![vittoria](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/vittoria.png)
 ![offline](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/offline.png)
+![mobile](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/screenshots/mobile_1.PNG)
 
 ## Tecnologie
 

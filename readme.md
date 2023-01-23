@@ -4,7 +4,7 @@
 ![logo](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/logo.png)
 ](https://www.blackjackjs.it/)
 ###  Link utili
- - [Gioco (blackjackjs,it)](https://www.blackjackjs.it/)
+ - [Gioco (blackjackjs.it)](https://www.blackjackjs.it/)
  - [Repo Github](https://github.com/grct/blackjack)
  - [Features](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#features)
  - [Screenshots](https://gitlab.istitutocorni.it/mattiaguercia/blackjack#screenshots)
@@ -96,7 +96,7 @@
 
 ## Grafiche
 ### Icona
-![icon](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/icon_1600x1600.png)
+[<img src="https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/icon_1600x1600.png" width="250"/>](https://gitlab.istitutocorni.it/mattiaguercia/blackjack/-/raw/main/assets/icon_1600x1600.png)
 
 ### Creazione del logo
 

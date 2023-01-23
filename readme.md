@@ -85,7 +85,7 @@
 - [ ] Animazione blackjack
 - [ ] Versione mobile
 - [ ] Migliorare CSS
-- [ ] Pulizia codice finale + commenti
+- [X] Pulizia codice finale + commenti
 - [ ] Completare readme
 - [ ] (?) Sezione Admin con visualizzazione di tutti i dati
 

@@ -239,8 +239,10 @@ const calcScore = (hand) => {
       if(c == undefined)
         return
       if(c.value == 'J' || c.value == 'Q' || c.value == 'K'){
-        if(ace && s+10 <= 21)
+        if(ace && s+10 <= 21){
           s += 10
+          ace = false
+        }
         if(!ace)
           s += 10
         return

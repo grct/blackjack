@@ -24,8 +24,9 @@ let time_left = 0;
 let round = 0;
 let currentPlayer = 0;
 
-app.get('/'), (req, res)=>res.json({message: "ok"})
+app.get('/'), (req, res)=>res.json({message: "200"})
 
+// Connessione iniziale
 io.on("connection", (socket) => {
     socket.on("joinGame", (name) => {
         players.push({ id: socket.id, name, hand: [], score: 0, stay: true, wins: 0, loses: 0, ties: 0 });
@@ -56,6 +57,7 @@ io.on("connection", (socket) => {
       io.emit("updatePlayers", players);
     });
 
+    // Non in uso
     socket.on("makeBet", (bet) => {
         players[currentPlayer].bet = bet;
         currentPlayer++;
@@ -64,6 +66,7 @@ io.on("connection", (socket) => {
         io.emit("updatePlayers", players);
     });
 
+    // Disconnessione
     socket.on("disconnect", () => {
         console.log(`(${players.length}) Left: ${socket.id}`)
         // Rimuovi giocatore dalla lista
@@ -72,31 +75,23 @@ io.on("connection", (socket) => {
         // Aggiorna i socket
         io.emit("updatePlayers", players);
     });
-
-    // socket.on("draw", () => {
-    //   let p = players.find(p => p.id === socket.id);
-    //   console.log(p.name + " is drawing")
-    //   drawCard(p);
-    // })
 });
 
 
-// CREA MAZZO
+// Crea mazzo (4 mazzi)
 const suits = ["spade", "cuori", "quadri", "picche"];
 const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 const newDeck = () => {
-  // let d = [];
   for(let i=0; i<4; i++)
     for (let suit of suits) {
       for (let value of values) {
         deck.push({ suit, value });
       }
     }
-  // return d;
 };
 
-// MESCOLA MAZZO
+// Mescola mazzo
 const shuffleDeck = () => {
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -104,15 +99,15 @@ const shuffleDeck = () => {
     }
 };
 
-// Pesca una carta
+// Player pesca una carta
 const drawCard = (p) => {
-  // console.log('Utente pesca!')
   p.hand.push(deck.pop());
   io.to(p.id).emit("updatePlayerHand", p.hand);
   p.score = calcScore(p.hand)
   io.emit("updatePlayers", players);
 }
 
+// Tavolo pesca una carta
 const tableDraw = () => {
   table.hand.push(deck.pop());
   console.log('Tavolo pesca: ' + JSON.stringify(table.hand[table.hand.length-1]))
@@ -121,6 +116,7 @@ const tableDraw = () => {
   io.emit("updateTable", table);
 }
 
+// Nuovo tavolo
 const newTable = () => {
   table.hand = [];
   table.hand.push(deck.pop());
@@ -137,9 +133,9 @@ const newTable = () => {
 //   io.emit("updatePlayers", players);
 // }
 
+// Da la mano iniziale ai players
 const giveCards = () => {
   players.forEach(p => {
-    // console.log("Dando mano a: " + p.name)
       p.hand = [];
       p.hand.push(deck.pop());
       p.hand.push(deck.pop());
@@ -149,20 +145,21 @@ const giveCards = () => {
   })
 }
 
+// Inizia il gioco
 const startGame = () => {
   if(timer)
     return
-  // deck = createDeck();
+
+  console.log('Game started!')
   newDeck()
   shuffleDeck();
-  // console.log(deck)
-  console.log('Game started!')
-  // Primo giro
   newRound();
+
   timer = setInterval(updateTimer, 1000);
   io.emit("updateTimeout", time_left);
 }
 
+// Timer
 const updateTimer = () => {
   // Controllo che ci siano dei giocatori
   // if(players.length < 1) {
@@ -180,6 +177,7 @@ const updateTimer = () => {
   io.emit("updateTimeout", time_left);
 }
  
+// Nuovo round
 const newRound = () => {
   let i
 
@@ -200,9 +198,6 @@ const newRound = () => {
 
   // Il tavolo pesca
   if(table.score < 17 && table.hand.length > 0){
-    // while(table.score < 17 && table.hand.length > 0){
-      // time_left = 20
-      // io.emit("updateTimeout", time_left);
     tableDraw()
     i = setInterval(() => {
       if(table.score < 17 && table.hand.length > 0)
@@ -213,12 +208,8 @@ const newRound = () => {
       }
     }, 1000);
 
-    // }
     time_left = 10
     io.emit("updateTimeout", time_left);
-    // setTimeout(function(){
-    //   clearHands()
-    // }, 3000);
     return
   }
   
@@ -231,6 +222,7 @@ const newRound = () => {
   io.emit("updateTimeout", time_left);
 }
 
+// Calcola il punteggio
 const calcScore = (hand) => {
   let s = 0
   let ace = false;
@@ -258,6 +250,7 @@ const calcScore = (hand) => {
   return s
 }
 
+// Controllo se il player sta
 const isStaying = (p, index, array) => {
   if(!p.stay && p.score < 21)
     drawCard(p)
@@ -271,6 +264,7 @@ const isStaying = (p, index, array) => {
       return p.stay && p.stay === array[index-1].stay
 }
 
+// Controllo vincitori
 const checkWinners = () => {
   players.forEach(p => {
     let result = ''

@@ -146,6 +146,7 @@ export default {
               s += 10
             if(!ace)
               s += 10
+              ace = false
             // console.log('figura: ' + s)
             return
           }

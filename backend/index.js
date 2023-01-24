@@ -186,7 +186,7 @@ const newRound = () => {
     // let d = createDeck()
     newDeck()
     shuffleDeck()
-    console.log(deck)
+    // console.log(deck)
   }
 
   // Se i giocatori NON hanno finito di pescare

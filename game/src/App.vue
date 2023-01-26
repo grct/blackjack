@@ -13,7 +13,7 @@
       <div class="choosename" v-if="player.name.length < 3">
         <h1>Choose a nickname</h1>
         <input type="text" v-model="temp">
-        <div class="btn" @click="temp.length >= 3 ? join() : null">Conferma</div>
+        <div class="btn" @click="temp.length >= 3 && temp.length <= 10 ? join() : null">Conferma</div>
       </div>
     </div>
 
@@ -252,7 +252,7 @@ export default {
   },
   mounted(){
     // Cache
-    if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2){
+    if(localStorage.name != undefined && JSON.parse(localStorage.name).length > 2 && JSON.parse(localStorage.name).length <= 10){
       this.player.name = JSON.parse(localStorage.name)
       // this.player.logged = JSON.parse(localStorage.logged)
     }
